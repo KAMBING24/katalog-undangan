@@ -17,129 +17,206 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#2b1d4a;--sky:#6ec6ff;--sky2:#bfe8ff;--grass:#57c443;--dirt:#c8763c;--pink:#ff5c8a;--gold:#ffd23f;--card:#fff8e7;--u-ink:#2b1d4a;--u-bg:#fff8e7}
+:root{--ink:#2b1d4a;--sky:#5cb8ff;--sky2:#ffd9ec;--grass:#57c443;--dirt:#c8763c;--pink:#ff5c8a;--gold:#ffd23f;--card:#fff8e7;--u-ink:#2b1d4a;--u-bg:#fff8e7}
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:auto}
-body{font-family:'VT323',monospace;font-size:21px;line-height:1.2;color:var(--ink);background:#2b1d4a;-webkit-font-smoothing:none;overflow-x:hidden;min-height:100vh}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+body{font-family:'VT323',monospace;font-size:20px;line-height:1.15;color:var(--ink);background:var(--sky);-webkit-font-smoothing:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 #u-root{display:contents}
-img{image-rendering:auto}svg{image-rendering:pixelated}
-/* ===== langit, awan, bukit (parallax lewat --x) ===== */
-.sky{position:absolute;inset:0;background:linear-gradient(var(--sky) 0 55%,var(--sky2));overflow:hidden}
-.cl{position:absolute;width:96px;height:28px;background:#fff;box-shadow:16px -12px 0 #fff,40px -12px 0 #fff,56px 0 0 #fff,0 4px 0 #d6efff;translate:calc(var(--x,0) * -.15px) 0}
-.c1{top:16%;left:8%}.c2{top:30%;left:62%;scale:.8}.c3{top:10%;left:120%}
-.stage .cl{display:none}
-.stage .sky::after{content:"";position:absolute;left:0;right:0;top:8%;height:40%;background:radial-gradient(circle 16px at 30px 30px,#fff 98%,transparent),radial-gradient(circle 22px at 56px 24px,#fff 98%,transparent),radial-gradient(circle 16px at 84px 32px,#fff 98%,transparent),radial-gradient(circle 12px at 200px 70px,#fff 98%,transparent),radial-gradient(circle 17px at 222px 62px,#fff 98%,transparent),radial-gradient(circle 12px at 246px 72px,#fff 98%,transparent);background-size:300px 100%;background-repeat:repeat-x;background-position-x:calc(var(--x,0) * -.15px)}
-.hills{position:absolute;left:0;right:0;bottom:44px;height:46%;
-  background:radial-gradient(ellipse 120px 100px at 50% 100%,#3fa34a 97%,transparent 100%) calc(var(--x,0) * -.35px + 40px) 100%/300px 100% repeat-x,
-             radial-gradient(ellipse 80px 66px at 50% 100%,#6fd36a 97%,transparent 100%) calc(var(--x,0) * -.5px) 100%/220px 70% repeat-x}
-.grd{position:absolute;left:0;right:0;bottom:0;height:48px;
+input,textarea,select{-webkit-user-select:text;user-select:text}
+/* ===== langit & latar parallax (--x = posisi kamera) ===== */
+.sky{position:absolute;inset:0;background:linear-gradient(var(--sky) 0 45%,#a6dcff 70%,var(--sky2));overflow:hidden}
+.sun{position:absolute;right:12%;top:14%;width:56px;height:56px;background:#fff3a6;box-shadow:0 0 0 6px rgba(255,243,166,.45),0 0 0 14px rgba(255,243,166,.2)}
+.game .sky::after{content:"";position:absolute;left:0;right:0;top:6%;height:60%;background:radial-gradient(circle 16px at 30px 40px,#fff 98%,transparent),radial-gradient(circle 22px at 56px 32px,#fff 98%,transparent),radial-gradient(circle 16px at 84px 42px,#fff 98%,transparent),radial-gradient(circle 11px at 260px 130px,rgba(255,255,255,.8) 98%,transparent),radial-gradient(circle 15px at 280px 122px,rgba(255,255,255,.8) 98%,transparent);background-size:360px 100%;background-repeat:repeat-x;background-position-x:calc(var(--x,0) * -.1px)}
+.cl{position:absolute;width:96px;height:28px;background:#fff;box-shadow:16px -12px 0 #fff,40px -12px 0 #fff,56px 0 0 #fff,0 4px 0 #d6efff;animation:drift 30s linear infinite alternate}
+.c1{top:16%;left:6%}.c2{top:30%;left:64%;scale:.8}.c3{top:46%;left:30%;scale:.6}
+.mtn{position:absolute;left:0;right:0;bottom:72px;height:40%;opacity:.55;
+  background:conic-gradient(from 135deg at 50% 0,#8fb3e8 90deg,transparent 0) calc(var(--x,0) * -.2px) 100%/260px 70% repeat-x}
+.hills{position:absolute;left:0;right:0;bottom:72px;height:34%;
+  background:radial-gradient(ellipse 120px 100px at 50% 100%,#3fa34a 97%,transparent 100%) calc(var(--x,0) * -.4px + 40px) 100%/300px 100% repeat-x,
+             radial-gradient(ellipse 80px 66px at 50% 100%,#6fd36a 97%,transparent 100%) calc(var(--x,0) * -.6px) 100%/220px 70% repeat-x}
+.grd{position:absolute;left:-600px;right:-600px;bottom:0;height:72px;
   background:linear-gradient(#7be05f 0 4px,var(--grass) 4px 12px,#2f8a2a 12px 16px,transparent 16px),
-  linear-gradient(90deg,rgba(0,0,0,.22) 3px,transparent 3px) 0 16px/32px 32px,linear-gradient(rgba(0,0,0,.22) 3px,transparent 3px) 0 16px/32px 16px,var(--dirt)}
+  linear-gradient(90deg,rgba(0,0,0,.2) 3px,transparent 3px) 0 16px/32px 32px,linear-gradient(rgba(0,0,0,.2) 3px,transparent 3px) 0 16px/32px 16px,var(--dirt)}
 /* ===== cover = layar judul ===== */
-.cover{position:fixed;inset:0;z-index:60;overflow:hidden;display:flex;flex-direction:column;align-items:center;transition:opacity .6s steps(4),visibility .6s}
+.cover{position:fixed;inset:0;z-index:60;overflow:hidden;transition:opacity .6s steps(4),visibility .6s}
 .cover.hide{opacity:0;visibility:hidden}
-.cover .hills{bottom:48px}
-.ttl{position:relative;margin-top:max(9vh,40px);text-align:center;padding:0 14px}
-.lv{font-family:'Press Start 2P';font-size:10px;color:#fff;text-shadow:2px 2px 0 var(--ink);letter-spacing:.1em}
-.nmz{font-family:'Press Start 2P';font-weight:400;font-size:clamp(20px,6.6vw,30px);line-height:1.35;color:#fff;text-shadow:3px 3px 0 var(--ink),-2px -2px 0 var(--ink),2px -2px 0 var(--ink),-2px 2px 0 var(--ink);margin:12px 0 8px}
-.nmz i{color:var(--pink);font-style:normal;margin:0 .25em;display:inline-block;animation:beat 1s steps(2) infinite}
-.dt{font-family:'Press Start 2P';font-size:12px;color:var(--gold);text-shadow:2px 2px 0 var(--ink)}
-.cgate{position:absolute;left:50%;bottom:48px;translate:-50% 0;width:200px;height:200px}
-.cgate .gate{left:0;bottom:0;margin-left:0}.cgate .duo{left:58px;bottom:0}
-.cp{position:absolute;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom));text-align:center;padding:0 16px}
-.cover .cp{bottom:auto;top:calc(max(9vh,40px) + 150px)}
-.to{font-family:'Press Start 2P';font-size:9px;color:#fff;text-shadow:2px 2px 0 var(--ink)}
+.cover .hills{bottom:72px}
+.ttl{position:relative;margin:max(8vh,30px) auto 0;text-align:center;padding:0 14px;max-width:480px}
+.lv{font-family:'Press Start 2P';font-size:9px;line-height:1.6;letter-spacing:.06em}
+.cover .lv{color:#fff;text-shadow:2px 2px 0 var(--ink)}
+.nmz{font-family:'Press Start 2P';font-weight:400;font-size:clamp(19px,6.4vw,30px);line-height:1.35;color:#fff;text-shadow:3px 3px 0 var(--ink),-2px -2px 0 var(--ink),2px -2px 0 var(--ink),-2px 2px 0 var(--ink);margin:10px 0 6px}
+.nmz i{color:var(--pink);font-style:normal;margin:0 .2em;display:inline-block;animation:beat 1s steps(2) infinite}
+.dt{font-family:'Press Start 2P';font-size:11px;color:var(--gold);text-shadow:2px 2px 0 var(--ink)}
+.to{font-family:'Press Start 2P';font-size:9px;color:#fff;text-shadow:2px 2px 0 var(--ink);margin-top:26px}
 .gn{font-size:28px;color:#fff;text-shadow:2px 2px 0 var(--ink);margin:2px 0 4px}
-.hint{font-family:'Press Start 2P';font-size:8px;color:#fff;margin-top:12px;text-shadow:1px 1px 0 var(--ink)}
+.hint{font-family:'Press Start 2P';font-size:7px;line-height:1.8;color:#fff;margin-top:12px;text-shadow:1px 1px 0 var(--ink)}
 .blink{animation:blink 1s steps(2) infinite}
-/* ===== panggung game (menempel di atas) ===== */
-.game{max-width:480px;margin:0 auto;background:var(--sky2)}
-.stage{position:sticky;top:0;z-index:5;height:clamp(290px,46vh,380px);overflow:hidden;border-bottom:4px solid var(--ink)}
-.world{position:absolute;top:0;bottom:0;left:calc(30% - 46px);will-change:translate}
-.hud{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;gap:8px;padding:8px 10px;font-family:'Press Start 2P';font-size:8px;color:#fff;text-shadow:2px 2px 0 var(--ink);z-index:3}
-.hud span{display:flex;flex-direction:column;gap:3px}.hud span:nth-child(2){flex-direction:row;align-items:center}.hud span:last-child{text-align:right}
-.hud b{font-weight:400;font-size:10px;color:var(--gold);max-width:120px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-/* sprite pasangan */
-.duo{position:absolute;left:30%;bottom:48px;width:84px;height:66px;z-index:2}
-.ch{position:absolute;bottom:0;width:40px;height:66px}.ch svg{position:absolute;inset:0;width:100%;height:100%}
-.ch.g{left:42px}.ch.b{left:0}
-.ch .fb{visibility:hidden}
-.duo.run .ch .fa{animation:fa .26s steps(1) infinite}.duo.run .ch .fb{animation:fb .26s steps(1) infinite}
-.duo.run .ch.b svg{animation-delay:-.13s}
-.duo.left{scale:-1 1}
-.duo:not(.run) .ch{animation:nod 1.2s steps(2) infinite}.duo:not(.run) .ch.b{animation-delay:-.6s}
-.duo.jump{animation:jump .5s cubic-bezier(.3,.7,.4,1)}
+.cgate{position:absolute;left:50%;bottom:72px;translate:-50% 0;width:200px;height:170px}
+.cgate .gate{left:0;bottom:0}.cgate .duo{left:58px;bottom:0}
+/* ===== panggung game ===== */
+.game{position:fixed;inset:0;overflow:hidden;touch-action:none}
+.world{position:absolute;left:0;top:0;bottom:0;will-change:translate}
+.hud{position:absolute;left:0;right:0;top:0;z-index:6;display:grid;grid-template-columns:1fr auto 1fr;gap:6px;padding:8px 62px 6px 10px;font-family:'Press Start 2P';font-size:7px;color:#fff;text-shadow:2px 2px 0 var(--ink);background:linear-gradient(rgba(43,29,74,.45),transparent)}
+.hud>span{display:flex;flex-direction:column;gap:3px}.hud .hm{flex-direction:row;align-items:center;gap:4px;font-size:9px}.hud>span:nth-child(3){text-align:right}
+.hud b{font-weight:400;font-size:10px;color:var(--gold);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:130px}
+.mini{grid-column:1/-1;position:relative;height:6px;background:rgba(43,29,74,.5);border:2px solid #fff;margin-top:2px}
+.mini i{position:absolute;top:-1px;width:4px;height:4px;background:var(--gold)}
+.mini .me{position:absolute;top:-4px;width:10px;height:10px;margin-left:-5px;background:var(--pink);border:2px solid #fff;max-width:none}
+.music{top:8px!important;bottom:auto!important;right:10px!important;width:40px!important;height:40px!important;border-radius:0!important;border:3px solid #fff!important;background:var(--ink)!important;color:#fff!important;z-index:7!important}
+/* ===== sprite pasangan ===== */
+.duo{position:absolute;left:0;bottom:72px;width:84px;height:64px;z-index:4;will-change:translate}
+.ch{position:absolute;bottom:0;width:40px;height:64px}.ch svg{position:absolute;inset:0;width:100%;height:100%}
+.ch.g{left:42px}.ch.b{left:0}.ch .fb{visibility:hidden}
+.duo.run .ch .fa{animation:fa .24s steps(1) infinite}.duo.run .ch .fb{animation:fb .24s steps(1) infinite}.duo.run .ch.b svg{animation-delay:-.12s}
+.duo.air .ch .fb{visibility:visible}.duo.air .ch .fa{visibility:hidden}
+.duo.left .ch,.duo.left .cimg{scale:-1 1}.duo.left .ch.g{left:0}.duo.left .ch.b{left:42px}
+.duo:not(.run):not(.air) .ch{animation:nod 1.2s steps(2) infinite}.duo:not(.run) .ch.b{animation-delay:-.6s}
 .cimg{position:absolute;left:0;bottom:0;width:100%;height:100%;object-fit:contain;object-position:50% 100%;image-rendering:pixelated}
-.duo.run .cimg{animation:nod .26s steps(2) infinite}
-/* benda di level */
-.ob{position:absolute;bottom:48px;z-index:1;font-family:'Press Start 2P';font-size:8px;color:#fff}
-.blk{bottom:164px;width:40px;height:40px;margin-left:22px;background:var(--pink);border:4px solid var(--ink);box-shadow:inset -5px -5px 0 #c2305e,inset 4px 4px 0 #ffb0c8;display:flex;align-items:center;justify-content:center}
-.blk b{font-size:16px;font-weight:400;color:#fff;text-shadow:2px 2px 0 #8e1d43}
-.ob.bump{animation:bump .35s steps(3)}
-.blk.bump::after{content:"♥";position:absolute;left:8px;top:-8px;font-size:18px;color:var(--pink);text-shadow:2px 2px 0 var(--ink);animation:pop .7s steps(5) forwards}
-.sign{width:96px;height:96px;margin-left:66px}
-.sign::before{content:"";position:absolute;left:44px;bottom:0;width:8px;height:56px;background:#7a4a24;border:2px solid var(--ink)}
-.sign b{position:absolute;left:0;right:0;top:0;height:40px;display:flex;align-items:center;justify-content:center;background:#b36a2c;border:4px solid var(--ink);box-shadow:inset 0 -4px 0 #7a4a24;font-weight:400;font-size:9px}
-.wall{display:flex;gap:6px;margin-left:-40px;padding:8px;background:#8a5a33;border:4px solid var(--ink);bottom:48px;margin-left:68px}
-.fr{display:block;width:40px;height:50px;border:3px solid var(--gold);background:#333;overflow:hidden}.fr img{width:100%;height:100%;object-fit:cover}
-.tv{width:76px;height:58px;margin-left:72px;background:#333;border:4px solid var(--ink);box-shadow:inset 0 0 0 4px #777;display:flex;align-items:center;justify-content:center}
-.tv::after{content:"";position:absolute;left:24px;bottom:-14px;width:20px;height:10px;background:var(--ink)}.tv{bottom:62px}
-.tv b{font-weight:400;font-size:14px;color:#7be05f;animation:blink .8s steps(2) infinite}
-.chest{width:60px;height:46px;margin-left:76px;background:#9a5a22;border:4px solid var(--ink);box-shadow:inset 0 14px 0 #c27a32,inset 0 -6px 0 #6e3c14}
-.chest b{position:absolute;left:20px;top:10px;width:12px;height:14px;background:var(--gold);border:2px solid var(--ink)}
-.chest.bump{box-shadow:inset 0 4px 0 #c27a32,inset 0 -6px 0 #6e3c14,0 -14px 0 -4px var(--gold)}
-.mail{width:44px;height:92px;margin-left:80px}
-.mail::before{content:"";position:absolute;left:18px;bottom:0;width:8px;height:52px;background:#555;border:2px solid var(--ink)}
-.mail b{position:absolute;left:0;top:0;width:44px;height:40px;background:#e2463b;border:4px solid var(--ink);border-radius:18px 18px 0 0;display:flex;align-items:center;justify-content:center;font-weight:400;font-size:14px}
-.gate{width:200px;height:170px;margin-left:-82px}
+.say{position:absolute;left:-14px;bottom:78px;width:120px;padding:6px;background:#fff;border:3px solid var(--ink);font-family:'Press Start 2P';font-size:7px;line-height:1.6;text-align:center;animation:bob 1s steps(2) infinite;transition:opacity .3s}
+.say::after{content:"";position:absolute;left:50px;bottom:-9px;width:10px;height:10px;background:#fff;border:3px solid var(--ink);border-top:0;border-left:0;rotate:45deg}
+.say.off{opacity:0}
+/* ===== tombol kontrol ===== */
+.pad{position:absolute;left:0;right:0;bottom:calc(8px + env(safe-area-inset-bottom));z-index:6;display:flex;justify-content:space-between;padding:0 10px;pointer-events:none}
+.pad>div{display:flex;gap:8px;pointer-events:auto}
+.pad button{width:56px;height:56px;font-family:'Press Start 2P';font-size:18px;color:#fff;background:rgba(43,29,74,.82);border:3px solid #fff;box-shadow:0 4px 0 rgba(0,0,0,.35);cursor:pointer;touch-action:none}
+.pad button.dn,.pad button:active{translate:0 3px;box-shadow:0 1px 0 rgba(0,0,0,.35);background:var(--pink)}
+.pad .auto{font-size:8px;width:52px}.pad .auto.on{background:var(--gold);color:var(--ink)}
+.pad .actb{width:auto;padding:0 12px;font-size:10px;background:var(--pink);animation:beat .8s steps(2) infinite}
+.pad .actb[hidden]{display:none}
+/* ===== benda darat ===== */
+.ob,.brk,.blk,.hc,.bush,.flw{position:absolute;display:block}
+.ob{bottom:72px;z-index:1;font-family:'Press Start 2P';font-size:8px;color:#fff}
+.sign{width:96px;height:96px}
+.sign::before,.post::before{content:"";position:absolute;left:44px;bottom:0;width:8px;height:56px;background:#7a4a24;border:2px solid var(--ink)}
+.sign b,.post b{position:absolute;left:0;right:0;top:0;height:40px;display:flex;align-items:center;justify-content:center;background:#b36a2c;border:4px solid var(--ink);box-shadow:inset 0 -4px 0 #7a4a24;font-weight:400;font-size:9px}
+.post{width:76px;height:84px}.post::before{left:34px;height:46px}
+.gate{width:200px;height:170px}
 .gate::before,.gate::after{content:"";position:absolute;bottom:0;width:18px;height:130px;background:#fff;border:4px solid var(--ink);box-shadow:inset -4px 0 0 #e5d6f0}
 .gate::before{left:0}.gate::after{right:0}
-.gate b{position:absolute;left:-6px;right:-6px;top:0;height:46px;display:flex;align-items:center;justify-content:center;background:#fff;border:4px solid var(--ink);border-radius:60px 60px 0 0;color:var(--pink);font-weight:400;font-size:9px;
-  box-shadow:0 -6px 0 -2px var(--pink),inset 0 -4px 0 #f2d6e2}
-.brk{position:absolute;bottom:206px;height:20px;background:#d1663a;border:3px solid var(--ink);
-  background-image:linear-gradient(90deg,var(--ink) 3px,transparent 3px),linear-gradient(var(--ink) 3px,transparent 3px);background-size:24px 20px,24px 10px;background-position:-3px 0,0 -3px}
-.hc{position:absolute;font-style:normal;font-size:22px;color:var(--pink);text-shadow:2px 2px 0 var(--ink);animation:bob 1s steps(2) infinite}
+.gate b{position:absolute;left:-6px;right:-6px;top:0;height:46px;display:flex;align-items:center;justify-content:center;background:#fff;border:4px solid var(--ink);border-radius:60px 60px 0 0;color:var(--pink);font-weight:400;font-size:9px;box-shadow:0 -6px 0 -2px var(--pink),inset 0 -4px 0 #f2d6e2}
+.flag{width:60px;height:180px}.flag::before{content:"";position:absolute;left:0;bottom:0;width:6px;height:180px;background:#eee;border:2px solid var(--ink)}
+.flag b{position:absolute;left:8px;top:6px;width:48px;height:32px;background:var(--pink);border:3px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:400;font-size:14px;animation:wave .6s steps(2) infinite}
+.brk{bottom:168px;height:22px;background:#d1663a;border:3px solid var(--ink);background-image:linear-gradient(90deg,var(--ink) 3px,transparent 3px),linear-gradient(var(--ink) 3px,transparent 3px);background-size:24px 22px,24px 11px;background-position:-3px 0,0 -3px}
+.blk{bottom:222px;width:40px;height:40px;background:var(--pink);border:4px solid var(--ink);box-shadow:inset -5px -5px 0 #c2305e,inset 4px 4px 0 #ffb0c8;display:flex;align-items:center;justify-content:center;font-style:normal}
+.blk b{font-size:16px;font-weight:400;color:#fff;text-shadow:2px 2px 0 #8e1d43;font-family:'Press Start 2P'}
+.blk.bump{animation:bump .3s steps(3)}
+.blk.bump::after{content:"♥";position:absolute;left:8px;top:-8px;font-size:18px;color:var(--pink);text-shadow:2px 2px 0 var(--ink);animation:pop .7s steps(5) forwards}
+.hc{font-style:normal;font-size:22px;color:var(--pink);text-shadow:2px 2px 0 var(--ink);animation:bob 1s steps(2) infinite}
 .hc.got{animation:collect .45s steps(4) forwards}
-/* kembang api di finish */
-.fw i{position:absolute;width:6px;height:6px;opacity:0;pointer-events:none}
+.bush{bottom:72px;width:64px;height:30px;background:radial-gradient(circle 16px at 16px 22px,#3fa34a 98%,transparent),radial-gradient(circle 18px at 34px 16px,#4cb84a 98%,transparent),radial-gradient(circle 14px at 50px 22px,#3fa34a 98%,transparent)}
+.flw{bottom:72px;width:30px;height:16px;background:radial-gradient(circle 4px at 5px 6px,#ffd23f 98%,transparent),radial-gradient(circle 4px at 15px 4px,#ff8ab0 98%,transparent),radial-gradient(circle 4px at 25px 7px,#fff 98%,transparent)}
+/* ===== benda langit: menyatu dengan dunia ===== */
+.sk{position:absolute;bottom:250px;z-index:2;opacity:0}
+.sk.hi{bottom:290px}.sk.lo{bottom:236px}
+.sk.seen{animation:drop .9s steps(6) both}
+.sk.seen>*{animation:float 3s steps(3) infinite alternate}
+.cld{position:relative;width:min(290px,80vw);padding:16px 16px 14px;text-align:center;background:#fff;border:4px solid #fff;box-shadow:0 0 0 3px #d8eeff,6px 8px 0 rgba(43,29,74,.18);scrollbar-width:none}
+.cld::-webkit-scrollbar{display:none}
+.sk>.cld::before{content:"";position:absolute;left:30px;right:30px;bottom:-18px;height:20px;background:radial-gradient(circle 14px at 20px 4px,#fff 98%,transparent),radial-gradient(circle 18px at 50% 2px,#fff 98%,transparent),radial-gradient(circle 13px at calc(100% - 18px) 4px,#fff 98%,transparent)}
+.sk>.cld::after{content:"";position:absolute;left:18px;right:18px;top:-26px;height:24px;background:radial-gradient(circle 20px at 30px 24px,#fff 98%,transparent),radial-gradient(circle 26px at 50% 26px,#fff 98%,transparent),radial-gradient(circle 18px at calc(100% - 26px) 24px,#fff 98%,transparent)}
+.cld.title{width:min(320px,86vw)}.cld.title .nmz{font-size:clamp(16px,5vw,22px)}
+.cld .lv{color:#8a6aa8;margin-bottom:6px}
+.qt,.kv{font-size:20px;line-height:1.2}.sr{font-family:'Press Start 2P';font-size:7px;margin-top:8px;color:#8a6aa8}
+.big{font-family:'Press Start 2P';font-size:15px;color:var(--pink);text-shadow:2px 2px 0 var(--ink);margin-bottom:8px}
+.nmz.sm{font-size:clamp(13px,4vw,17px)!important}
+.story h3{font-family:'Press Start 2P';font-weight:400;font-size:9px;line-height:1.6;margin:4px 0}.story .yr{font-family:'Press Start 2P';font-size:13px;color:var(--gold);text-shadow:2px 2px 0 var(--ink)}
+.calc{width:min(270px,78vw)}
+/* pesawat kertas + spanduk */
+.plane{display:flex;align-items:center;bottom:300px}
+.pl{font-size:34px;color:#fff;text-shadow:2px 2px 0 var(--ink);order:2;rotate:-8deg}
+.ban{width:min(300px,78vw);padding:10px 16px;background:var(--gold);border:3px solid var(--ink);clip-path:polygon(0 0,100% 0,96% 50%,100% 100%,0 100%,4% 50%);text-align:center;font-size:19px;line-height:1.15}
+/* balon udara mempelai */
+.pair{display:flex;align-items:flex-start;gap:6px;bottom:236px}
+.bal{width:150px;display:flex;flex-direction:column;align-items:center}
+.bal.p2{margin-top:40px}
+.env{width:126px;height:136px;border-radius:50% 50% 46% 46%;border:4px solid var(--ink);overflow:hidden;position:relative;background:repeating-linear-gradient(90deg,var(--pink) 0 20px,#fff 20px 40px)}
+.bal.p2 .env{background:repeating-linear-gradient(90deg,#5cb8ff 0 20px,#fff 20px 40px)}
+.env img{position:absolute;left:19px;top:20px;width:80px;height:92px;object-fit:cover;border:3px solid var(--ink);border-radius:40px 40px 6px 6px}
+.rope{display:block;width:60px;height:22px;border-left:2px solid var(--ink);border-right:2px solid var(--ink)}
+.bsk{width:150px;padding:6px;background:#c27a32;border:3px solid var(--ink);box-shadow:inset 0 -4px 0 #8a5022;color:#fff8e7;text-align:center}
+.bsk h3{font-family:'Press Start 2P';font-weight:400;font-size:8px;line-height:1.5}.bsk p{font-size:16px;line-height:1.1}.bsk a{color:var(--gold);font-size:16px}
+.hrt{font-style:normal;font-size:24px;color:var(--pink);text-shadow:2px 2px 0 var(--ink);align-self:center;animation:beat 1s steps(2) infinite}
+/* awan papan skor */
+.count{display:flex;justify-content:center;gap:5px;margin:8px 0 4px}.count div{background:var(--ink);border:3px solid var(--gold);min-width:54px;padding:5px 0 3px;color:var(--gold)}
+.count b{display:block;font-family:'Press Start 2P';font-weight:400;font-size:13px;line-height:1.3}.count span{font-family:'Press Start 2P';font-size:6px;color:#9fe3ff}
+/* pulau melayang */
+.isl{bottom:236px;width:min(280px,80vw);display:flex;flex-direction:column;align-items:center}
+.bb{width:100%;padding:12px;background:#fff8e7;border:4px solid var(--ink);box-shadow:inset 0 0 0 3px #f1c27d;text-align:center;font-size:19px;line-height:1.15;margin-bottom:-4px;position:relative;z-index:1}
+.bb .tm{font-family:'Press Start 2P';font-size:12px;margin:4px 0;color:var(--pink)}
+.land{position:relative;width:86%;height:46px;background:linear-gradient(#7be05f 0 6px,var(--grass) 6px 14px,var(--dirt) 14px);border:4px solid var(--ink);clip-path:polygon(0 0,100% 0,100% 40%,88% 40%,88% 70%,70% 70%,70% 100%,30% 100%,30% 70%,12% 70%,12% 40%,0 40%)}
+.chest{position:absolute;left:50%;bottom:calc(100% - 4px);width:56px;height:44px;margin-left:-28px;background:#9a5a22;border:4px solid var(--ink);box-shadow:inset 0 14px 0 #c27a32,inset 0 -6px 0 #6e3c14;cursor:pointer}
+.chest::after{content:"";position:absolute;left:18px;top:10px;width:12px;height:14px;background:var(--gold);border:2px solid var(--ink)}
+.isl .chest{position:relative;left:auto;bottom:auto;margin:6px auto -4px;display:block}
+.chest-l{display:flex;flex-direction:column;align-items:center;width:86%}
+/* kantor pos awan */
+.post-o .house{position:relative;width:150px;height:110px;background:#fff8e7;border:4px solid var(--ink);margin:46px 0 -4px;cursor:pointer;box-shadow:inset 0 -6px 0 #f1c27d}
+.house::before{content:"";position:absolute;left:-20px;right:-20px;top:-50px;height:46px;background:#e2463b;clip-path:polygon(50% 0,100% 100%,0 100%)}
+.house b{position:absolute;left:12px;top:12px;padding:4px 6px;background:#e2463b;color:#fff;border:3px solid var(--ink);font-family:'Press Start 2P';font-weight:400;font-size:9px}
+.house .door{position:absolute;right:20px;bottom:0;width:34px;height:52px;background:#7a4a24;border:3px solid var(--ink);border-bottom:0}
+.pp1,.pp2{position:absolute;font-style:normal;font-size:22px;color:#fff;text-shadow:2px 2px 0 var(--ink);animation:fly 4s steps(8) infinite}
+.pp1{left:-10px;top:0}.pp2{right:-6px;top:40px;animation-delay:-2s}
+/* layang-layang */
+.kite{bottom:236px;display:flex;flex-direction:column;align-items:center;width:min(270px,78vw)}
+.kt{display:block;width:56px;height:56px;rotate:45deg;background:conic-gradient(var(--pink) 0 25%,var(--gold) 0 50%,#5cb8ff 0 75%,#fff 0);border:4px solid var(--ink);margin-bottom:-6px;animation:kite 2s steps(2) infinite}
+.str{display:block;width:2px;height:26px;background:var(--ink)}
+.kp{width:100%;max-height:calc(100dvh - 420px);overflow:auto;padding:10px 12px;background:#fff;border:4px solid var(--ink);text-align:center;font-size:18px;line-height:1.15}
+.kp h3{font-family:'Press Start 2P';font-weight:400;font-size:8px;margin-top:6px}.tix .kp{cursor:pointer;background:var(--gold)}
+/* galeri: tali jemuran antara dua balon */
+.line{bottom:250px;height:230px}
+.lb{position:absolute;top:0;width:56px;height:64px;border-radius:50% 50% 46% 46%;border:4px solid var(--ink);background:var(--pink)}
+.lb.l{left:0}.lb.r{right:0;background:#5cb8ff}
+.lb::after{content:"";position:absolute;left:24px;top:60px;width:2px;height:48px;background:var(--ink)}
+.tag{position:absolute;left:70px;top:8px;color:#fff;text-shadow:2px 2px 0 var(--ink)}
+.str2{position:absolute;left:26px;right:26px;top:106px;height:24px;border-bottom:3px solid var(--ink);border-radius:0 0 50% 50%}
+.pols{position:absolute;left:64px;top:120px;display:flex;gap:16px}
+.pol{position:relative;width:80px;padding:5px 5px 16px;background:#fff;border:2px solid var(--ink);rotate:var(--r);cursor:pointer;box-shadow:3px 3px 0 rgba(43,29,74,.25);transform-origin:50% 0}
+.pol::before{content:"";position:absolute;left:34px;top:-10px;width:8px;height:14px;background:#c27a32;border:2px solid var(--ink)}
+.pol img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+.sk.seen .pols{animation:none}.sk.seen .pol{animation:swing 2.4s steps(4) infinite alternate}
+/* kapal udara */
+.blimp{bottom:290px}
+.zep{position:relative;width:230px;height:92px;border-radius:50%;background:linear-gradient(#d7d7e8,#a7a7c2);border:4px solid var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.zep::after{content:"";position:absolute;right:-22px;top:22px;width:28px;height:40px;background:var(--pink);clip-path:polygon(0 50%,100% 0,100% 100%)}
+.zep b{padding:8px 10px;background:var(--ink);color:#7be05f;border:3px solid #fff;font-family:'Press Start 2P';font-weight:400;font-size:9px;animation:blink .8s steps(2) infinite}
+/* pelangi & kembang api */
+.rainbow{position:absolute;bottom:72px;width:560px;height:280px;border-radius:280px 280px 0 0;opacity:.75;z-index:0;
+  background:radial-gradient(circle at 50% 100%,transparent 52%,#9b7bff 52% 57%,#5cb8ff 57% 62%,#7be05f 62% 67%,#ffd23f 67% 72%,#ff9a3c 72% 77%,#ff5c8a 77% 82%,transparent 82%)}
+.fw i{position:absolute;width:6px;height:6px;opacity:0;pointer-events:none;z-index:3}
 .fin .fw i{animation:burst 1.6s steps(6) infinite}
-.fw i:nth-child(1){left:20%;top:26%;color:var(--gold)}.fw i:nth-child(2){left:70%;top:20%;color:var(--pink);animation-delay:.5s}.fw i:nth-child(3){left:48%;top:36%;color:#7be05f;animation-delay:1s}
-/* ===== kartu dialog ===== */
-.cards{padding:18px 14px calc(100vh - 290px);display:flex;flex-direction:column;gap:22px}
-.dlg{background:var(--card);border:4px solid var(--ink);box-shadow:inset 0 0 0 3px #fff,inset 0 0 0 6px #ffd9e6,6px 6px 0 rgba(43,29,74,.35);padding:14px 16px 18px;text-align:center}
-.dlg h2{font-family:'Press Start 2P';font-weight:400;font-size:10px;line-height:1.6;text-align:left;color:#fff;background:var(--ink);margin:-14px -16px 14px;padding:8px 12px}
-.dlg h2 i{font-style:normal;color:var(--gold)}
-.dlg .nmz{color:var(--card);font-size:clamp(16px,5vw,22px)}.dlg .nmz.sm{font-size:clamp(13px,4vw,17px)}
-.tg,.qt,.kv{font-size:21px;line-height:1.25}.qt{margin-top:10px}.sr{font-family:'Press Start 2P';font-size:8px;margin-top:8px;color:#8a6aa8}
-.big{font-family:'Press Start 2P';font-size:16px;color:var(--pink);text-shadow:2px 2px 0 var(--ink)}
-.pps{display:grid;gap:10px}.pp h3{font-family:'Press Start 2P';font-weight:400;font-size:11px;line-height:1.5;margin:8px 0 4px}.pp p{font-size:19px}.pp a{color:#6b3fa0}
-.av{width:120px;height:140px;margin:0 auto;border:4px solid var(--ink);box-shadow:4px 4px 0 var(--pink);overflow:hidden}.av img{width:100%;height:100%;object-fit:cover}
-.hrt{font-style:normal;font-size:26px;color:var(--pink);animation:beat 1s steps(2) infinite}
-.count{display:flex;justify-content:center;gap:6px;margin:12px 0 4px}.count div{background:var(--ink);border:3px solid var(--gold);min-width:62px;padding:6px 0 4px;color:var(--gold)}
-.count b{display:block;font-family:'Press Start 2P';font-weight:400;font-size:15px;line-height:1.3}.count span{font-family:'Press Start 2P';font-size:7px;color:#9fe3ff}
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;cursor:pointer;text-decoration:none;font-family:'Press Start 2P';font-size:11px;color:#fff;background:var(--pink);border:4px solid var(--ink);padding:8px 16px;margin-top:10px;box-shadow:inset 0 -4px 0 #c2305e,0 4px 0 var(--ink);text-transform:uppercase}
-.btn:active{translate:0 4px;box-shadow:inset 0 -4px 0 #c2305e}.btn.ghost{background:var(--gold);color:var(--ink);box-shadow:inset 0 -4px 0 #d9a514,0 4px 0 var(--ink)}.btn.sm{font-size:9px;padding:6px 12px}
-.ev{margin:10px 0}.ev-t{font-family:'Press Start 2P';font-size:11px;line-height:1.5}
-.gal{display:grid;grid-template-columns:1fr 1fr;gap:6px}.gal .g{aspect-ratio:3/4;border:3px solid var(--ink);overflow:hidden;cursor:pointer}.gal img{width:100%;height:100%;object-fit:cover}
-.gal .g:last-child:nth-child(odd){grid-column:span 2;aspect-ratio:4/3}
-.bank{border:3px dashed var(--ink);padding:10px;margin-top:10px;display:grid;justify-items:center}.bank strong{font-family:'Press Start 2P';font-weight:400;font-size:13px;margin:6px 0}
+.fw i:nth-child(1){left:20%;top:22%;color:var(--gold)}.fw i:nth-child(2){left:72%;top:18%;color:var(--pink);animation-delay:.4s}.fw i:nth-child(3){left:48%;top:32%;color:#7be05f;animation-delay:.8s}.fw i:nth-child(4){left:84%;top:40%;color:#fff;animation-delay:1.2s}
+/* ===== gulungan perkamen (modal) ===== */
+.mdl{position:fixed;inset:0;z-index:70;display:flex;align-items:flex-end;justify-content:center;padding:70px 12px 12px;background:rgba(43,29,74,.55);visibility:hidden;opacity:0;transition:opacity .25s steps(3),visibility .25s}
+.mdl.show{visibility:visible;opacity:1}
+.scroll{position:relative;width:min(460px,100%);max-height:100%;overflow:auto;padding:16px 16px 22px;background:#fff1cf;border:4px solid var(--ink);box-shadow:inset 0 0 0 4px #e8c98a;translate:0 30px;transition:translate .3s steps(4);text-align:center;-webkit-user-select:text;user-select:text}
+.mdl.show .scroll{translate:0 0}
+.scroll h2{font-family:'Press Start 2P';font-weight:400;font-size:11px;color:#fff;background:var(--ink);margin:-16px -16px 14px;padding:10px 44px 10px 12px;text-align:left}
+.mx{position:absolute;right:6px;top:4px;width:34px;height:34px;font-family:'Press Start 2P';font-size:12px;background:var(--pink);color:#fff;border:3px solid #fff;cursor:pointer}
+/* ===== komponen bersama ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;cursor:pointer;text-decoration:none;font-family:'Press Start 2P';font-size:10px;color:#fff;background:var(--pink);border:3px solid var(--ink);padding:6px 12px;margin:8px 3px 0;box-shadow:inset 0 -4px 0 #c2305e,0 3px 0 var(--ink);text-transform:uppercase}
+.btn:active{translate:0 3px;box-shadow:inset 0 -4px 0 #c2305e}.btn.ghost{background:var(--gold);color:var(--ink);box-shadow:inset 0 -4px 0 #d9a514,0 3px 0 var(--ink)}.btn.sm{font-size:8px;padding:5px 10px}
+.bank{border:3px dashed var(--ink);padding:10px;margin-top:10px;display:grid;justify-items:center}.bank strong{font-family:'Press Start 2P';font-weight:400;font-size:12px;margin:6px 0}
 input,select,textarea{font-family:'VT323',monospace;font-size:20px;border:3px solid var(--ink);border-radius:0}
-.end-h{font-family:'Press Start 2P';font-size:8px;color:#fff;text-align:center;opacity:.7}
-.map{border:3px solid var(--ink)}
+.vid{position:relative;aspect-ratio:16/9}.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 /* ===== gerak ===== */
 @keyframes fa{0%{visibility:visible}50%{visibility:hidden}}
 @keyframes fb{0%{visibility:hidden}50%{visibility:visible}}
 @keyframes nod{50%{translate:0 2px}}
-@keyframes jump{40%{translate:0 -50px}100%{translate:0 0}}
-@keyframes bump{50%{translate:0 -10px}}
-@keyframes pop{to{translate:0 -40px;opacity:0}}
+@keyframes bump{50%{translate:0 -12px}}
+@keyframes pop{to{translate:0 -44px;opacity:0}}
 @keyframes bob{50%{translate:0 -4px}}
+@keyframes float{to{translate:0 -6px}}
+@keyframes drop{from{opacity:0;translate:0 -60px}to{opacity:1;translate:0 0}}
 @keyframes collect{to{translate:0 -60px;opacity:0;scale:1.4}}
-@keyframes beat{50%{scale:1.25}}
+@keyframes beat{50%{scale:1.2}}
 @keyframes blink{50%{opacity:.35}}
+@keyframes wave{50%{scale:1 .85}}
+@keyframes kite{50%{rotate:52deg}}
+@keyframes swing{to{rotate:calc(var(--r) * -1)}}
+@keyframes fly{50%{translate:20px -12px}}
+@keyframes drift{to{translate:40px 0}}
 @keyframes burst{0%{opacity:1;box-shadow:0 0 0 currentColor}100%{opacity:0;box-shadow:0 -40px 0 currentColor,28px -28px 0 currentColor,40px 0 0 currentColor,28px 28px 0 currentColor,0 40px 0 currentColor,-28px 28px 0 currentColor,-40px 0 0 currentColor,-28px -28px 0 currentColor}}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.rv .w{opacity:1!important}.ch .fb{visibility:hidden!important}}
-.world .grd{left:-500px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.sk{opacity:1!important}.ch .fb{visibility:hidden!important}.ch .fa{visibility:visible!important}}
+@media (max-height:620px){.sk{bottom:212px}.sk.hi,.blimp,.plane{bottom:240px}}
 
 </style>
 </head>
@@ -627,10 +704,12 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
 </script>
 <script>
-/* TEMA PLATFORM ("Wedding Run") — undangan game platformer side-scrolling yang digerakkan SCROLL:
-   panggung game menempel di atas layar (langit, awan & bukit parallax, tanah ubin, sprite pasangan), kartu info mengalir di bawahnya.
-   Saat kartu ke-i mendekat, pasangan berlari ke pos ke-i, melompat, benda pos memantul, lalu kartu muncul. Scroll naik = lari ke kiri.
-   Dunia & karakter orisinal (blok hati, hati koleksi, gerbang pernikahan). Sprite kustom: illustrationURL (lihat PROMPT-ILUSTRASI → pixel). */
+/* TEMA PLATFORM ("Wedding Run") — undangan game platformer yang benar-benar dimainkan:
+   tombol ◀ ▶ (tahan) untuk jalan, ⤒ untuk lompat, AUTO untuk berjalan sendiri. Semua info menyatu di LANGIT dunia game:
+   awan judul, spanduk pesawat kertas, balon udara mempelai, awan papan skor, pulau melayang acara, awan kisah, layang-layang info,
+   tali jemuran foto antara dua balon (galeri), kapal udara video, pulau peti harta (amplop), kantor pos awan (RSVP), pelangi penutup.
+   Benda yang isinya panjang (video, amplop, RSVP, QR) dibuka dengan tombol BUKA saat didekati → gulungan perkamen.
+   Dunia & karakter orisinal (blok hati, hati koleksi). Sprite kustom: illustrationURL. */
 Undangan.register('platform', {
   base: true,
   render(C, H) {
@@ -638,7 +717,7 @@ Undangan.register('platform', {
     H.setVar('--u-ink', '#2b1d4a'); H.setVar('--u-bg', '#fff8e7');
     const names = H.names;
 
-    /* sprite 12 x 20 (peta karakter dari tema pixel) + frame kaki berlari */
+    /* ---------- sprite 12 x 20 + frame kaki berlari ---------- */
     const PAL = { H: '#5b3a22', h: '#8a5a33', S: '#f3c9a0', E: '#2a1a10', B: '#f08a7c', T: '#4f9a8f', t: '#3b7a72', P: '#8a6a3a', K: '#2f2118', O: '#e39a3a', o: '#a8661c', W: '#fff' };
     const GROOM = ['...HHHHHH...', '..HHHHHHHH..', '..HHSSSSHH..', '..HSSSSSSH..', '..HSESSESH..', '..SSBSSBSS..', '...SSSSSS...', '....SSSS....', '..TTTTTTTT..', '.TTTTTTTTTT.', '.STTTTTTTTS.', '.STtTTTTtTS.', '.SSTTTTTTSS.', '..TTTTTTTT..', '..PPPPPPPP..', '..PPP..PPP..', '..PPP..PPP..', '..PPP..PPP..', '..KKK..KKK..', '.KKKK..KKKK.'];
     const BRIDE = ['...OOOOOO...', '.OOOOOOOOOO.', 'OOOOOOOOOOOO', '..oHHHHHHo..', '..HHSSSSHH..', '..HSESSESH..', '..SSBSSBSS..', '...SSSSSS...', '...HSSSSH...', '..TTTTTTTT..', '.TTTTTTTTTT.', '.STTTTTTTTS.', '.SSTTTTTTSS.', '..TTTTTTTT..', '.TTTTTTTTTT.', '.TTTTTTTTTT.', '..SS....SS..', '..SS....SS..', '..KK....KK..', '.KKK....KKK.'];
@@ -649,78 +728,112 @@ Undangan.register('platform', {
     const hero = C.illustrationURL ? `<img class="cimg" src="${esc(C.illustrationURL)}" alt="${esc(names)}">`
       : `<span class="ch b">${svg(BRIDE, 'fa')}${svg(B2, 'fb')}</span><span class="ch g">${svg(GROOM, 'fa')}${svg(G2, 'fb')}</span>`;
 
-    /* pos: [benda di level, judul kartu, isi kartu] — hanya pos yang isinya ada */
-    const quote = has('quote') && C.quote && C.quote.text ? `<p class="qt">“${esc(C.quote.text)}”</p><p class="sr">${esc(C.quote.source)}</p>` : '';
-    const couple = has('couple') ? (() => {
-      const p = (full, par, ig, ph) => `<div class="pp">${ph ? `<div class="av"><img src="${esc(ph)}" alt="${esc(full)}" loading="lazy"></div>` : ''}<h3>${esc(full)}</h3><p>${esc(par)}</p>${ig ? `<a href="https://instagram.com/${esc(ig)}" target="_blank" rel="noopener">@${esc(ig)}</a>` : ''}</div>`;
-      return `<div class="pps">${p(C.fullName1, C.parents1, C.instagram1, C.photo1)}<i class="hrt">♥</i>${p(C.fullName2, C.parents2, C.instagram2, C.photo2)}</div>`;
-    })() : '';
-    const when = `<p class="kv">${esc(date.long)}</p>${B.calendar()}
+    /* ---------- dunia: potongan berurutan dari kiri ke kanan ---------- */
+    let X = 0; const W = [], SKY = [], ST = [], MD = [];
+    const piece = (w, ground, sky, st) => { if (ground) W.push(ground.replace(/@x/g, X)); if (sky) SKY.push(sky.replace(/@x/g, X)); if (st) ST.push(Object.assign({ x0: X, x1: X + w }, st)); X += w; };
+    const sk = (cls, x, inner, extra = '') => `<div class="sk ${cls}" data-x="${x}" style="left:${x}px;${extra}">${inner}</div>`;
+    const cloud = (inner, cls = '') => `<div class="cld ${cls}">${inner}</div>`;
+    const btn = (label, href) => `<a class="btn sm" href="${esc(href)}" target="_blank" rel="noopener">${label}</a>`;
+    const modal = (id, title, body) => { MD.push(`<div class="mdl" id="m-${id}" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="scroll"><button class="mx" aria-label="Tutup">✕</button><h2>${esc(title)}</h2><div class="mb">${body}</div></div></div>`); };
+    /* jeda darat: bata, blok hati, hati koleksi, semak/bunga */
+    let gapN = 0;
+    const gap = () => { const i = gapN++, b = i % 3; piece(240,
+      `<i class="brk" style="left:@xpx;margin-left:20px;width:${b ? 96 : 72}px" data-solid></i>
+       <i class="blk" style="left:@xpx;margin-left:${b ? 150 : 130}px" data-solid data-blk><b>♥</b></i>
+       ${[0, 1, 2].map(j => `<i class="hc" style="left:@xpx;margin-left:${34 + j * 26}px;bottom:${132 + (j === 1 ? 12 : 0)}px" data-hc>♥</i>`).join('')}
+       <i class="bush" style="left:@xpx;margin-left:${b === 1 ? 200 : 10}px"></i><i class="flw" style="left:@xpx;margin-left:${120 + b * 20}px"></i>`); };
+
+    /* 1. START: gerbang + awan judul */
+    piece(560, `<div class="ob gate" style="left:@xpx;margin-left:-6px"><b>START</b></div><div class="ob sign" style="left:@xpx;margin-left:330px"><b>JALAN ▶</b></div>`,
+      sk('big', X + 70, cloud(`<p class="lv">${esc(C.coverText || 'Undangan Pernikahan')}</p><h1 class="nmz">${esc(C.name1)}<i>♥</i>${esc(C.name2)}</h1><p class="dt">${esc(date.dmyDots)}</p>`, 'title')));
+    gap();
+    /* 2. spanduk pesawat kertas (tagline) & awan ayat */
+    if (C.tagline) { piece(440, '', sk('plane', X + 10, `<span class="pl">✈</span><div class="ban"><p>${esc(C.tagline)}</p></div>`)); }
+    if (has('quote') && C.quote && C.quote.text) { piece(420, '', sk('', X + 40, cloud(`<p class="qt">“${esc(C.quote.text)}”</p><p class="sr">${esc(C.quote.source)}</p>`))); gap(); }
+    /* 3. mempelai di dua balon udara */
+    if (has('couple')) {
+      const bal = (full, par, ig, ph, c) => `<div class="bal ${c}"><div class="env">${ph ? `<img src="${esc(ph)}" alt="${esc(full)}" loading="lazy">` : ''}</div><i class="rope"></i><div class="bsk"><h3>${esc(full)}</h3><p>${esc(par)}</p>${ig ? `<a href="https://instagram.com/${esc(ig)}" target="_blank" rel="noopener">@${esc(ig)}</a>` : ''}</div></div>`;
+      piece(600, '', sk('pair', X + 20, `${bal(C.fullName1, C.parents1, C.instagram1, C.photo1, 'p1')}<i class="hrt">♥</i>${bal(C.fullName2, C.parents2, C.instagram2, C.photo2, 'p2')}`));
+      gap();
+    }
+    /* 4. awan papan skor: hitung mundur */
+    piece(440, '', sk('', X + 30, cloud(`<p class="lv">MENUJU HARI H</p><p class="kv">${esc(date.long)}</p>
       <div class="count"><div><b data-cd="d">0</b><span>HARI</span></div><div><b data-cd="h">0</b><span>JAM</span></div><div><b data-cd="m">0</b><span>MNT</span></div><div><b data-cd="s">0</b><span>DTK</span></div></div>
-      <a class="btn sm" href="${H.gcal}" target="_blank" rel="noopener">+ Simpan ke Kalender</a>`;
-    const frames = [0, 1, 2].map(i => `<i class="fr"><img src="${esc(H.pic(i))}" alt="" loading="lazy"></i>`).join('');
-    const S = [
-      ['sign', 'START', `<h1 class="nmz">${esc(C.name1)} <i>♥</i> ${esc(C.name2)}</h1><p class="tg">${esc(C.tagline || '')}</p>${quote}`],
-      ['blk', 'Mempelai', couple],
-      ['blk', 'Hari H', when],
-      ['arrow', 'Acara', B.events() + (has('livestream') && C.livestreamURL ? `<a class="btn sm" href="${esc(C.livestreamURL)}" target="_blank" rel="noopener">▶ Live Streaming</a>` : '')],
-      ['blk', 'Jadwal', B.program()],
-      ['blk', 'Kisah Kami', B.story()],
-      ['info', 'Info Penting', B.dresscode() + B.details()],
-      ['wall', 'Galeri', B.gallery()],
-      ['tv', 'Video', B.video()],
-      ['chest', 'Tanda Kasih', B.gift()],
-      ['mail', 'Konfirmasi', B.rsvp()],
-      ['blk', 'QR Tamu', B.qr()],
-      ['gate', 'Finish', `<p class="big">${esc(C.thanksTitle || 'TERIMA KASIH')}</p><p class="qt">${esc(C.closingText)}</p><p class="nmz sm">${esc(names)}</p>${C.hashtag ? `<p class="sr">${esc(C.hashtag)}</p>` : ''}`]
-    ].filter(s => s[2]);
+      ${btn('+ Kalender', H.gcal)}`, 'score')));
+    const calHtml = B.calendar(); if (calHtml) piece(360, '', sk('lo', X + 20, cloud(calHtml, 'calc')));
+    gap();
+    /* 5. acara di pulau melayang */
+    if (has('events')) (C.events || []).forEach((e, i, a) => {
+      piece(420, '', sk('isl', X + 30, `<div class="bb"><p class="lv">${esc(e.title)}</p>${e.dateText ? `<p>${esc(e.dateText)}</p>` : ''}<p class="tm">${esc(e.timeText)}</p><p><b>${esc(e.venue)}</b><br>${esc(e.address)}</p>
+        ${e.mapsURL ? btn('📍 Peta', e.mapsURL) : ''}${i === a.length - 1 && has('livestream') && C.livestreamURL ? btn('▶ Live', C.livestreamURL) : ''}</div><div class="land"></div>`, `--bob:${i % 2 ? -1 : 1}`));
+    });
+    const prog = B.program(); if (prog) piece(400, '', sk('', X + 30, cloud(`<p class="lv">JADWAL</p>${prog}`)));
+    gap();
+    /* 6. kisah kami: deretan awan */
+    if (has('story') && (C.story || []).length) {
+      C.story.forEach((s, i) => piece(320, `<div class="ob post" style="left:@xpx;margin-left:120px"><b>${esc(s.date)}</b></div>`,
+        sk(i % 2 ? 'hi' : '', X + 20, cloud(`<p class="yr">★ ${esc(s.date)}</p><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p>`, 'story'))));
+      gap();
+    }
+    /* 7. info penting di layang-layang */
+    const info = B.dresscode() + B.details();
+    if (info) { piece(420, '', sk('kite', X + 40, `<i class="kt"></i><i class="str"></i><div class="kp"><p class="lv">INFO PENTING</p>${info}</div>`)); gap(); }
+    /* 8. galeri: tali jemuran foto antara dua balon */
+    if (has('gallery') && H.gal.length) {
+      const n = H.gal.length;
+      piece(n * 96 + 220, '', sk('line', X + 20, `<i class="lb l"></i><i class="lb r"></i><p class="lv tag">GALERI ♥</p><div class="str2"></div><div class="pols">${H.gal.map((g, i) => `<div class="pol g" data-src="${esc(g)}" style="--r:${(i % 3 - 1) * 4}deg">${H.img(g, 'Galeri')}</div>`).join('')}</div>`, `width:${n * 96 + 160}px`));
+      gap();
+    }
+    /* 9. kapal udara video */
+    const vid = B.video();
+    if (vid) { modal('video', 'Video', vid); piece(400, '', sk('blimp', X + 30, `<div class="zep" data-mdl="video"><b>▶ TONTON</b></div>`), { mdl: 'video', label: 'TONTON' }); }
+    /* 10. pulau peti harta (amplop) */
+    const gift = B.gift();
+    if (gift) { modal('gift', 'Tanda Kasih', gift); piece(400, '', sk('isl', X + 30, `<div class="bb"><p class="lv">TANDA KASIH</p><p>Buka peti harta ini</p></div><i class="chest" data-mdl="gift"></i><div class="land"></div>`), { mdl: 'gift', label: 'BUKA' }); }
+    /* 11. kantor pos awan (RSVP) */
+    const rsvp = B.rsvp();
+    if (rsvp) { modal('rsvp', 'Konfirmasi Kehadiran', rsvp); piece(440, '', sk('isl post-o', X + 30, `<i class="pp1">✉</i><i class="pp2">✉</i><div class="house" data-mdl="rsvp"><b>POS</b><i class="door"></i></div><div class="land"></div>`), { mdl: 'rsvp', label: 'RSVP' }); }
+    /* 12. tiket QR di layang-layang */
+    const qr = B.qr();
+    if (qr) { modal('qr', 'QR Tamu', qr); piece(320, '', sk('kite tix', X + 40, `<i class="kt"></i><i class="str"></i><div class="kp" data-mdl="qr"><p class="lv">🎟 QR TAMU</p><p>Tunjukkan saat tiba</p></div>`), { mdl: 'qr', label: 'QR' }); }
+    gap();
+    /* 13. FINISH: pelangi + gerbang + awan penutup */
+    const FIN = X;
+    piece(820, `<div class="ob gate fin-g" style="left:@xpx;margin-left:250px"><b>JUST MARRIED</b></div><div class="ob flag" style="left:@xpx;margin-left:640px"><b>♥</b></div>`,
+      `<i class="rainbow" style="left:${X + 120}px"></i>` + sk('big', X + 60, cloud(`<p class="big">${esc(C.thanksTitle || 'TERIMA KASIH')}</p><p class="qt">${esc(C.closingText)}</p><p class="nmz sm">${esc(names)}</p>${C.hashtag ? `<p class="sr">${esc(C.hashtag)}</p>` : ''}`, 'title')));
+    const WW = X;
 
-    const GAP = 380;   // jarak antarpos di dunia (px)
-    const obj = (k, i) => ({
-      sign: `<div class="ob sign"><b>START</b></div>`,
-      blk: `<div class="ob blk"><b>♥</b></div>`,
-      arrow: `<div class="ob sign arrow"><b>ACARA ▶</b></div>`,
-      info: `<div class="ob sign"><b>INFO</b></div>`,
-      wall: `<div class="ob wall">${frames}</div>`,
-      tv: `<div class="ob tv"><b>▶</b></div>`,
-      chest: `<div class="ob chest"><b></b></div>`,
-      mail: `<div class="ob mail"><b>✉</b></div>`,
-      gate: `<div class="ob gate"><b>JUST MARRIED</b></div>`
-    })[k].replace('class="ob ', `data-st="${i}" style="left:${i * GAP + 70}px" class="ob `);
-    const hearts = S.slice(1).map((_, i) => [0.3, 0.45, 0.6].map((f, j) => `<i class="hc" data-hx="${Math.round((i + f) * GAP + 30)}" style="left:${Math.round((i + f) * GAP + 30)}px;bottom:${j === 1 ? 118 : 84}px">♥</i>`).join('')).join('');
-    const bricks = S.slice(1).map((_, i) => `<i class="brk" style="left:${Math.round((i + 0.38) * GAP)}px;width:${72 + (i % 3) * 24}px"></i>`).join('');
-
-    let h = `<section class="cover" data-cover><div class="sky"><i class="cl c1"></i><i class="cl c2"></i><i class="cl c3"></i></div><div class="hills"></div>
-      <div class="ttl"><p class="lv">— WEDDING RUN —</p><h1 class="nmz">${esc(C.name1)}<i>♥</i>${esc(C.name2)}</h1><p class="dt">${esc(date.dmyDots)}</p></div>
-      <div class="cgate"><div class="ob gate"><b>JUST MARRIED</b></div><div class="duo">${hero}</div></div><div class="grd"></div>
-      <div class="cp"><p class="to">PEMAIN 1</p><p class="gn" data-guest></p><button class="btn blink" data-open>▶ ${esc(C.openButton || 'Mulai')}</button><p class="hint">scroll untuk berlari</p></div></section>
-    <div class="game" style="--n:${S.length}">
-      <div class="stage" aria-hidden="true">
-        <div class="sky"><i class="cl c1"></i><i class="cl c2"></i><i class="cl c3"></i></div><div class="hills"></div>
-        <div class="world" style="width:${S.length * GAP + 400}px">${bricks}${S.map((s, i) => obj(s[0], i)).join('')}${hearts}<div class="grd"></div></div>
-        <div class="duo run-able">${hero}</div>
-        <div class="hud"><span>PEMAIN<b data-guest></b></span><span>♥ x <b class="hcnt">00</b></span><span>H-<b data-cd="d">0</b></span></div>
-        <div class="fw"><i></i><i></i><i></i></div>
-      </div>
-      <main class="cards">${S.map((s, i) => `<section class="dlg rv" data-card="${i}"><h2><i>◆</i> ${i ? `POS ${i}` : 'MULAI'} · ${esc(s[1])}</h2><div class="db">${s[2]}</div></section>`).join('')}
-      <p class="end-h">▲ scroll ke atas untuk kembali</p></main>
-    </div>`;
-    return h;
+    const mini = ST.filter(s => s.mdl).map(s => `<i style="left:${(s.x0 / WW * 100).toFixed(2)}%"></i>`).join('');
+    return `<section class="cover" data-cover><div class="sky"><i class="sun"></i><i class="cl c1"></i><i class="cl c2"></i><i class="cl c3"></i></div><div class="hills"></div>
+      <div class="ttl"><p class="lv">— WEDDING RUN —</p><h1 class="nmz">${esc(C.name1)}<i>♥</i>${esc(C.name2)}</h1><p class="dt">${esc(date.dmyDots)}</p>
+        <p class="to">PEMAIN 1</p><p class="gn" data-guest></p><button class="btn blink" data-open>▶ ${esc(C.openButton || 'Mulai')}</button><p class="hint">tahan ▶ untuk berjalan · ⤒ untuk lompat</p></div>
+      <div class="cgate"><div class="ob gate"><b>JUST MARRIED</b></div><div class="duo">${hero}</div></div><div class="grd"></div></section>
+    <div class="game" data-ww="${WW}" data-fin="${FIN}" data-st='${JSON.stringify(ST.map(s => [s.x0, s.x1, s.mdl, s.label]))}'>
+      <div class="sky"><i class="sun"></i></div><div class="mtn"></div><div class="hills"></div>
+      <div class="world" style="width:${WW}px">${SKY.join('')}${W.join('')}<div class="grd"></div></div>
+      <div class="duo">${hero}<p class="say">Tahan ▶ untuk jalan!</p></div>
+      <div class="fw"><i></i><i></i><i></i><i></i></div>
+      <div class="hud"><span>PEMAIN<b data-guest></b></span><span class="hm">♥ x <b class="hcnt">00</b></span><span>H-<b data-cd="d">0</b></span>
+        <div class="mini">${mini}<b class="me"></b></div></div>
+      <div class="pad"><div><button data-k="L" aria-label="Jalan ke kiri">◀</button><button data-k="R" aria-label="Jalan ke kanan">▶</button></div>
+        <div><button class="auto" aria-label="Jalan otomatis">AUTO</button><button class="actb" hidden>BUKA</button><button data-k="J" aria-label="Lompat">⤒</button></div></div>
+    </div>${MD.join('')}`;
   },
 
-  /* Gerak: scroll → posisi dunia (lerp antarpos), sprite lari 2 frame (steps) / idle mengangguk, lompat + blok memantul saat tiba,
-     hati terkumpul saat dilewati, kembang api di finish. Bunyi kecil hanya bila musik sedang menyala. Reduce-motion: pindah langsung. */
+  /* Game loop: fisika sederhana (gravitasi, lompat, mendarat di bata/blok, kepala memantulkan blok hati), kamera mengikuti,
+     parallax langit/gunung/bukit lewat --x, benda langit "turun" saat masuk layar (.seen), tombol BUKA muncul di dekat pos,
+     kembang api di finish. Bunyi kecil hanya bila musik menyala. */
   after(root) {
-    Undangan.splitWords(root, '.tg, .qt, .sr, .kv, .pp h3, .ev-t, .ev-d, .ev-h, .ev-p, .st h3, .st .yr, .det h3, .dc p, .big',
-      el => el.closest('form') || el.closest('.count') || el.closest('button') || el.closest('a'));
     const $ = s => root.querySelector(s), $$ = s => [...root.querySelectorAll(s)];
-    const stage = $('.stage'), world = $('.world'), duo = $('.stage .duo'), cnt = $('.hcnt');
-    const cards = $$('[data-card]'), obs = $$('.world [data-st]'), hcs = $$('.hc').map(e => [e, +e.dataset.hx]);
-    if (!stage || !cards.length) return;
-    const GAP = 380, still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const ease = t => t < .5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
+    const game = $('.game'); if (!game) return;
+    const world = $('.world'), duo = $('.game .duo'), cnt = $('.hcnt'), me = $('.mini .me'), actb = $('.actb'), say = $('.say'), autoB = $('.auto');
+    const WW = +game.dataset.ww, FIN = +game.dataset.fin, ST = JSON.parse(game.dataset.st), GRD = 72, PW = 84, PH = 64;
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const lx = el => parseFloat(el.style.left) + (parseFloat(el.style.marginLeft) || 0);
+    const solids = $$('[data-solid]').map(el => ({ el, x: lx(el), w: el.offsetWidth, y: parseFloat(getComputedStyle(el).bottom) - GRD, h: el.offsetHeight, blk: el.hasAttribute('data-blk') }));
+    const hearts = $$('[data-hc]').map(el => ({ el, x: lx(el) + 10, y: parseFloat(el.style.bottom) - GRD + 10 }));
+    const skies = $$('.sk').map(el => [el, +el.dataset.x]);
 
-    /* bunyi chiptune kecil (orisinal), hanya saat tombol musik aktif */
     let ac; const beep = (f1, f2, d) => {
       if (!document.querySelector('.music.on')) return;
       try { ac = ac || new AudioContext(); const o = ac.createOscillator(), g = ac.createGain(), t = ac.currentTime;
@@ -728,33 +841,69 @@ Undangan.register('platform', {
         g.gain.setValueAtTime(.04, t); g.gain.exponentialRampToValueAtTime(.001, t + d); o.connect(g).connect(ac.destination); o.start(t); o.stop(t + d); } catch (e) { /* audio tidak tersedia */ }
     };
 
-    let anchors = [];
-    const measure = () => { const sh = stage.offsetHeight; anchors = cards.map((c, i) => i ? c.offsetTop - sh - 40 : 0); };   // offsetTop: abaikan geser translate dari .rv
-    let lastX = -1, st = 0, got = 0, idleT, raf = 0;
-    const frame = () => {
-      raf = 0; const s = scrollY; let i = 0;
-      while (i + 1 < anchors.length && s >= anchors[i + 1]) i++;
-      let x = i * GAP;
-      if (i + 1 < anchors.length && !still) { const R = Math.min(300, (anchors[i + 1] - anchors[i]) * .85), t = (s - (anchors[i + 1] - R)) / R;
-        if (t > 0) x += GAP * ease(Math.min(1, t)); }
-      world.style.translate = `${-x}px 0`; stage.style.setProperty('--x', x);
-      if (lastX >= 0 && Math.abs(x - lastX) > .3) { duo.classList.add('run'); duo.classList.toggle('left', x < lastX); clearTimeout(idleT); idleT = setTimeout(() => duo.classList.remove('run'), 140); }
-      lastX = x;
-      if (i !== st) {                                   // tiba di pos baru
-        if (i > st) { const o = obs[i]; duo.classList.remove('jump'); void duo.offsetWidth; duo.classList.add('jump');
-          if (o) { o.classList.remove('bump'); void o.offsetWidth; o.classList.add('bump'); } beep(520, 1040, .18); }
-        st = i; stage.classList.toggle('fin', i === cards.length - 1);
+    /* ---------- input: tombol layar, keyboard ---------- */
+    const keys = { L: 0, R: 0, J: 0 }; let auto = false, jumpQ = false, open = null, moved = false;
+    const setAuto = v => { auto = v; autoB.classList.toggle('on', v); };
+    $$('.pad [data-k]').forEach(b => {
+      const k = b.dataset.k, on = e => { e.preventDefault(); b.setPointerCapture && b.setPointerCapture(e.pointerId); keys[k] = 1; b.classList.add('dn'); if (k === 'J') jumpQ = true; else setAuto(false); }, off = () => { keys[k] = 0; b.classList.remove('dn'); };
+      b.addEventListener('pointerdown', on); ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => b.addEventListener(t, off)); b.addEventListener('contextmenu', e => e.preventDefault());
+    });
+    autoB.addEventListener('click', () => setAuto(!auto));
+    const KM = { ArrowLeft: 'L', a: 'L', A: 'L', ArrowRight: 'R', d: 'R', D: 'R', ArrowUp: 'J', w: 'J', W: 'J', ' ': 'J' };
+    addEventListener('keydown', e => {
+      if (open) { if (e.key === 'Escape') closeM(); return; }
+      if (e.target.closest && e.target.closest('input,textarea,select')) return;
+      if ((e.key === 'Enter' || e.key === 'e') && !actb.hidden) { actb.click(); return; }
+      const k = KM[e.key]; if (!k) return; e.preventDefault(); if (k === 'J' && !keys.J) jumpQ = true; keys[k] = 1; if (k !== 'J') setAuto(false);
+    });
+    addEventListener('keyup', e => { const k = KM[e.key]; if (k) keys[k] = 0; });
+
+    /* ---------- gulungan perkamen (modal) ---------- */
+    const openM = id => { const m = document.getElementById('m-' + id); if (!m) return; open = m; m.classList.add('show'); setAuto(false); Object.keys(keys).forEach(k => keys[k] = 0); beep(330, 660, .2); setTimeout(() => m.querySelector('.mx').focus(), 50); };
+    const closeM = () => { if (!open) return; open.classList.remove('show'); open = null; };
+    $$('.mdl').forEach(m => m.addEventListener('click', e => { if (e.target === m || e.target.closest('.mx')) closeM(); }));
+    root.addEventListener('click', e => { const t = e.target.closest('[data-mdl]'); if (t && !e.target.closest('.mdl')) openM(t.dataset.mdl); });
+    let near = null; actb.addEventListener('click', () => near && openM(near[2]));
+
+    /* ---------- fisika ---------- */
+    const G = 1800, V0 = 680, SP = 200;
+    /* #x=1234 = mulai di posisi itu (untuk cek tampilan) */
+    let px = +(location.hash.match(/^#x=(\d+)/) || [0, 70])[1], py = 0, vy = 0, onG = true, face = 1, cam = 0, got = 0, last = 0, fin = false;
+    const hit = s => px < s.x + s.w && px + PW > s.x && py < s.y + s.h && py + PH > s.y;
+    const step = dt => {
+      const dir = open ? 0 : (keys.R || auto ? 1 : 0) - (keys.L ? 1 : 0);
+      if (dir) { face = dir; if (!moved) { moved = true; say.classList.add('off'); } }
+      px = Math.max(0, Math.min(WW - PW, px + dir * SP * dt));
+      for (const s of solids) if (hit(s)) px = dir > 0 ? s.x - PW : s.x + s.w;
+      if (jumpQ && onG && !open) { vy = V0; onG = false; beep(400, 800, .12); }
+      jumpQ = false;
+      const py0 = py; vy -= G * dt; py += vy * dt; onG = false;
+      if (py <= 0) { py = 0; vy = 0; onG = true; }
+      for (const s of solids) if (hit(s)) {
+        if (vy <= 0 && py0 >= s.y + s.h - 1) { py = s.y + s.h; vy = 0; onG = true; }
+        else if (vy > 0 && py0 + PH <= s.y + 1) { py = s.y - PH; vy = 0;
+          if (s.blk) { s.el.classList.remove('bump'); void s.el.offsetWidth; s.el.classList.add('bump'); if (!s.used) { s.used = 1; got++; } beep(520, 1040, .18); } }
       }
-      const n = hcs.filter(([e, hx]) => { const on = hx < x + 40; e.classList.toggle('got', on); return on; }).length;
-      if (n > got) beep(990, 1480, .09);
-      got = n; cnt.textContent = String(n).padStart(2, '0');
+      if (auto && px >= WW - PW - 1) setAuto(false);
+      const cx = px + PW / 2;
+      for (const h of hearts) if (!h.got && Math.abs(cx - h.x) < 40 && Math.abs(py + PH / 2 - h.y) < 46) { h.got = 1; h.el.classList.add('got'); got++; beep(990, 1480, .09); }
+      if (!fin && px > FIN + 300) { fin = true; game.classList.add('fin'); }
+      near = ST.find(s => s[2] && cx > s[0] - 20 && cx < s[1]) || null;
+      actb.hidden = !near; if (near) actb.textContent = near[3];
     };
-    const req = () => { if (!raf) raf = requestAnimationFrame(frame); };
-    measure(); frame();
-    addEventListener('scroll', req, { passive: true });
-    addEventListener('resize', () => { measure(); req(); });
-    new ResizeObserver(() => { measure(); req(); }).observe($('.cards'));   // foto lazy mengubah tinggi kartu → ukur ulang
-    $$('[data-open]').forEach(b => b.addEventListener('click', () => setTimeout(() => { measure(); req(); }, 300)));
+    const draw = () => {
+      const vw = game.clientWidth;
+      cam = Math.max(0, Math.min(WW - vw, px + PW / 2 - vw * .42));
+      world.style.translate = `${-cam}px 0`; game.style.setProperty('--x', cam);
+      duo.style.translate = `${px - cam}px ${-py}px`;
+      duo.classList.toggle('left', face < 0); duo.classList.toggle('air', !onG);
+      duo.classList.toggle('run', onG && !open && !!((keys.R || auto) ^ keys.L));
+      cnt.textContent = String(got).padStart(2, '0'); me.style.left = (px / WW * 100) + '%';
+      for (const k of skies) if (!k[2] && k[1] < cam + vw + 60) { k[2] = 1; k[0].classList.add('seen'); }
+    };
+    const loop = t => { const dt = Math.min(.033, (t - (last || t)) / 1000); last = t; step(dt); draw(); requestAnimationFrame(loop); };
+    draw(); requestAnimationFrame(loop);
+    if (still) skies.forEach(k => k[0].classList.add('seen'));
   }
 });
 
