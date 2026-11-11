@@ -58,6 +58,9 @@ section{padding:56px 0;scroll-margin-top:64px}
 .shot img{width:100%;height:100%;object-fit:cover;object-position:top}
 .shot:hover{transform:translateY(-4px);box-shadow:0 2px 4px rgba(43,36,32,.06),0 18px 40px rgba(43,36,32,.16)}
 .noimg{display:flex;height:100%;align-items:center;justify-content:center;font-family:"Cormorant Garamond",serif;font-size:24px}
+.free{position:absolute;top:10px;left:10px;right:10px;text-align:center;background:var(--accent);color:#fff;font-size:11.5px;font-weight:700;letter-spacing:.02em;padding:6px 8px;border-radius:999px;box-shadow:0 4px 12px rgba(138,75,59,.35)}
+@media(max-width:600px){.free{font-size:9.5px;padding:5px 4px;top:8px;left:6px;right:6px;white-space:nowrap;letter-spacing:0}}
+.hnote{display:flex;gap:10px;align-items:flex-start;margin:-6px 0 24px;padding:12px 16px;background:var(--accent-2);border-radius:14px;font-size:14.5px;font-weight:600;color:var(--accent)}
 .peek{position:absolute;left:10px;right:10px;bottom:10px;text-align:center;background:rgba(43,36,32,.86);color:#fff;font-size:13px;font-weight:600;padding:9px;border-radius:999px;opacity:0;transform:translateY(6px);transition:.25s}
 .shot:hover .peek,.shot:focus-visible .peek{opacity:1;transform:none}
 .meta{padding:14px 2px 0;display:flex;flex-direction:column;gap:6px;flex:1}
@@ -106,6 +109,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
     <h1>Undangan pernikahan digital yang terasa <em>personal</em></h1>
     <p class="lead">Pilih gaya favoritmu, kirim datanya, dan undangan siap dibagikan lewat WhatsApp dalam 1×24 jam. Setiap tamu mendapat link dengan namanya sendiri.</p>
     <div class="acts"><a class="btn" href="#tema">Lihat 24 tema</a><a class="btn ghost" href="https://wa.me/6281326549861?text=Halo%20Titikbersama%2C%20saya%20mau%20pesan%20undangan%20digital." target="_blank" rel="noopener">Pesan via WhatsApp</a></div>
+    <p class="hnote"><span>✦</span>Bonus: ilustrasi kartun kustom yang mirip kalian, GRATIS untuk tema ilustrasi.</p>
     <ul class="stats"><li><b>24 desain</b>siap pakai</li><li><b>1×24 jam</b>pengerjaan</li><li><b>Rp49rb</b>harga mulai</li></ul>
   </div>
   <div class="fan" aria-hidden="true"><div class="ph"><img src="thumbs/demo-sage.webp" alt="" fetchpriority="high"></div><div class="ph"><img src="thumbs/demo-poster.webp" alt="" fetchpriority="high"></div><div class="ph"><img src="thumbs/demo-pixel.webp" alt="" fetchpriority="high"></div></div>
@@ -115,24 +119,26 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
   <div class="head"><div><p class="eyebrow">Katalog tema</p><h2>Pilih gaya undanganmu</h2><p class="lead">Ketuk sebuah tema untuk membuka demo lengkapnya, persis seperti yang akan dilihat tamu di HP.</p></div></div>
   <div class="chips" role="toolbar" aria-label="Saring tema">
     <button class="chip" type="button" data-f="" data-d="Semua tema yang tersedia. Ketuk salah satu gaya untuk menyaring." aria-pressed="true">Semua<small>24</small></button>
-    <button class="chip" type="button" data-f="Elegan Klasik" data-d="Lembut dan anggun: warna krem, serif klasik, cocok untuk acara formal." aria-pressed="false">Elegan Klasik<small>7</small></button><button class="chip" type="button" data-f="Minimalis" data-d="Bersih dan sederhana: sedikit warna, banyak ruang kosong, fokus pada tulisan." aria-pressed="false">Minimalis<small>4</small></button><button class="chip" type="button" data-f="Foto Prewedding" data-d="Menonjolkan foto prewedding kalian: foto besar di cover dan galeri." aria-pressed="false">Foto Prewedding<small>14</small></button><button class="chip" type="button" data-f="Ilustrasi Kartun" data-d="Pasangan digambar jadi kartun lucu (bisa dibuat mirip kalian), tanpa perlu foto prewedding." aria-pressed="false">Ilustrasi Kartun<small>7</small></button><button class="chip" type="button" data-f="Unik &amp; Retro" data-d="Konsep tak biasa: koran, poster film, polaroid, kolase zine, sampai game pixel." aria-pressed="false">Unik &amp; Retro<small>7</small></button>
+    <button class="chip" type="button" data-f="Elegan Klasik" data-d="Lembut dan anggun: warna krem, serif klasik, cocok untuk acara formal." aria-pressed="false">Elegan Klasik<small>7</small></button><button class="chip" type="button" data-f="Minimalis" data-d="Bersih dan sederhana: sedikit warna, banyak ruang kosong, fokus pada tulisan." aria-pressed="false">Minimalis<small>4</small></button><button class="chip" type="button" data-f="Foto Prewedding" data-d="Menonjolkan foto prewedding kalian: foto besar di cover dan galeri." aria-pressed="false">Foto Prewedding<small>14</small></button><button class="chip" type="button" data-f="Ilustrasi Kartun" data-d="Pasangan digambar jadi kartun mirip kalian dari foto. Ilustrasi kustom GRATIS di semua paket." aria-pressed="false">Ilustrasi Kartun<small>7</small></button><button class="chip" type="button" data-f="Unik &amp; Retro" data-d="Konsep tak biasa: koran, poster film, polaroid, kolase zine, sampai game pixel." aria-pressed="false">Unik &amp; Retro<small>7</small></button>
   </div>
   <p class="finfo" id="finfo">Semua tema yang tersedia. Ketuk salah satu gaya untuk menyaring.</p>
   <p class="sr" id="count" role="status" aria-live="polite" style="position:absolute;left:-9999px"></p>
   <ul class="grid" id="grid"><li class="card" data-moods="Elegan Klasik|Ilustrasi Kartun">
   <a class="shot" href="demo-sage/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Sage Garden">
     <img src="thumbs/demo-sage.webp" alt="" width="260" height="563" fetchpriority="high" decoding="async">
+    <span class="free">✦ Ilustrasi kustom GRATIS</span>
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
     <h3>Sage Garden</h3>
     <p class="tags"><span>Elegan Klasik</span><span>Ilustrasi Kartun</span></p>
-    <p class="desc">Kertas krem dengan garis hijau sage dan ilustrasi wajah pasangan. Lembut dan klasik.</p>
+    <p class="desc">Ilustrasi garis hijau sage satu tarikan dengan busana pilihan kalian. Lembut dan klasik.</p>
     <div class="acts"><a class="btn sm" href="demo-sage/index.html?to=Tamu+Undangan" target="_blank" rel="noopener">Lihat demo</a><a class="btn sm ghost" href="https://wa.me/6281326549861?text=Halo%20Titikbersama%2C%20saya%20mau%20pesan%20undangan%20digital%20tema%20Sage%20Garden." target="_blank" rel="noopener">Pesan</a></div>
   </div>
 </li><li class="card" data-moods="Elegan Klasik">
   <a class="shot" href="demo-pearl/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Pearl Letter">
     <img src="thumbs/demo-pearl.webp" alt="" width="260" height="563" fetchpriority="high" decoding="async">
+    
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -144,6 +150,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Elegan Klasik|Foto Prewedding">
   <a class="shot" href="demo-olive/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Olive Love">
     <img src="thumbs/demo-olive.webp" alt="" width="260" height="563" fetchpriority="high" decoding="async">
+    
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -155,6 +162,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Elegan Klasik|Foto Prewedding">
   <a class="shot" href="demo-editorial/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Editorial">
     <img src="thumbs/demo-editorial.webp" alt="" width="260" height="563" fetchpriority="high" decoding="async">
+    
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -166,6 +174,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Elegan Klasik|Foto Prewedding">
   <a class="shot" href="demo-arch/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Arch Portrait">
     <img src="thumbs/demo-arch.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -177,6 +186,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Elegan Klasik|Foto Prewedding">
   <a class="shot" href="demo-arch-fade/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Arch Fade">
     <img src="thumbs/demo-arch-fade.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -188,6 +198,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Minimalis|Elegan Klasik">
   <a class="shot" href="demo-envelope/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Ribbon Envelope">
     <img src="thumbs/demo-envelope.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -199,6 +210,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Minimalis|Ilustrasi Kartun">
   <a class="shot" href="demo-line/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Blush Line">
     <img src="thumbs/demo-line.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    <span class="free">✦ Ilustrasi kustom GRATIS</span>
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -210,6 +222,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Minimalis">
   <a class="shot" href="demo-mono/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Cozy Blue">
     <img src="thumbs/demo-mono.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -221,6 +234,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Minimalis|Ilustrasi Kartun">
   <a class="shot" href="demo-wavy/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Wavy Ink">
     <img src="thumbs/demo-wavy.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    <span class="free">✦ Ilustrasi kustom GRATIS</span>
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -232,6 +246,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Foto Prewedding">
   <a class="shot" href="demo-numeral/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Big Date">
     <img src="thumbs/demo-numeral.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -243,6 +258,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Foto Prewedding">
   <a class="shot" href="demo-numeral-dark/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Big Date Noir">
     <img src="thumbs/demo-numeral-dark.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -254,6 +270,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Foto Prewedding|Unik &amp; Retro">
   <a class="shot" href="demo-poster/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Movie Poster">
     <img src="thumbs/demo-poster.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -265,6 +282,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Foto Prewedding|Unik &amp; Retro">
   <a class="shot" href="demo-polaroid/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Red Polaroid">
     <img src="thumbs/demo-polaroid.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -276,6 +294,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Foto Prewedding">
   <a class="shot" href="demo-photostrip/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Photo Booth">
     <img src="thumbs/demo-photostrip.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -287,6 +306,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Foto Prewedding">
   <a class="shot" href="demo-film/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Film Strip">
     <img src="thumbs/demo-film.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -298,6 +318,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Foto Prewedding">
   <a class="shot" href="demo-torn/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Torn Paper">
     <img src="thumbs/demo-torn.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -309,6 +330,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Foto Prewedding">
   <a class="shot" href="demo-torn-marun/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Torn Paper Maroon">
     <img src="thumbs/demo-torn-marun.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -320,6 +342,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Unik &amp; Retro|Foto Prewedding">
   <a class="shot" href="demo-news/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Wedding Post">
     <img src="thumbs/demo-news.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -331,6 +354,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Unik &amp; Retro|Foto Prewedding">
   <a class="shot" href="demo-collage/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Zine Collage">
     <img src="thumbs/demo-collage.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -342,6 +366,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Unik &amp; Retro|Ilustrasi Kartun">
   <a class="shot" href="demo-doodle/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Doodle Pop">
     <img src="thumbs/demo-doodle.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -353,6 +378,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Ilustrasi Kartun">
   <a class="shot" href="demo-tulip/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Tulip Card">
     <img src="thumbs/demo-tulip.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    <span class="free">✦ Ilustrasi kustom GRATIS</span>
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -364,17 +390,19 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 </li><li class="card" data-moods="Ilustrasi Kartun|Unik &amp; Retro">
   <a class="shot" href="demo-cartoon/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Kraft Cartoon">
     <img src="thumbs/demo-cartoon.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    <span class="free">✦ Ilustrasi kustom GRATIS</span>
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
     <h3>Kraft Cartoon</h3>
     <p class="tags"><span>Ilustrasi Kartun</span><span>Unik &amp; Retro</span></p>
-    <p class="desc">Kartu kraft dan amplop dengan ilustrasi kartun pasangan. Bisa dibuat mirip kalian.</p>
+    <p class="desc">Kartu kraft dan amplop dengan ilustrasi kartun pasangan pensil warna yang dibuat mirip kalian.</p>
     <div class="acts"><a class="btn sm" href="demo-cartoon/index.html?to=Tamu+Undangan" target="_blank" rel="noopener">Lihat demo</a><a class="btn sm ghost" href="https://wa.me/6281326549861?text=Halo%20Titikbersama%2C%20saya%20mau%20pesan%20undangan%20digital%20tema%20Kraft%20Cartoon." target="_blank" rel="noopener">Pesan</a></div>
   </div>
 </li><li class="card" data-moods="Unik &amp; Retro|Ilustrasi Kartun">
   <a class="shot" href="demo-pixel/index.html?to=Tamu+Undangan" target="_blank" rel="noopener" aria-label="Buka demo Pixel Quest">
     <img src="thumbs/demo-pixel.webp" alt="" width="260" height="563" loading="lazy" decoding="async">
+    <span class="free">✦ Ilustrasi kustom GRATIS</span>
     <span class="peek">Lihat demo →</span>
   </a>
   <div class="meta">
@@ -390,11 +418,11 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
   <p class="eyebrow">Paket & harga</p><h2>Sesuaikan dengan kebutuhanmu</h2><p class="lead">Semua tema bisa dipakai di paket mana pun. Harga sekali bayar, tanpa biaya bulanan.</p>
   <div class="pk"><div class="pkg">
     <h3>Basic</h3><p class="price">Rp49.000</p><p class="note">Inti undangan, siap 1×24 jam</p>
-    <ul><li>1 tema pilihan</li><li>Nama tamu personal</li><li>Hitung mundur &amp; simpan ke kalender</li><li>Tombol Google Maps</li><li>Galeri 4 foto</li><li>RSVP via WhatsApp</li><li>Aktif 3 bulan · 1× revisi</li></ul><a class="btn ghost" href="https://wa.me/6281326549861?text=Halo%20Titikbersama%2C%20saya%20mau%20pesan%20undangan%20digital%20paket%20Basic." target="_blank" rel="noopener">Pilih Basic</a></div><div class="pkg best"><span class="badge">Paling laris</span>
+    <ul><li>1 tema pilihan</li><li>Ilustrasi kustom mirip kalian (tema ilustrasi), gratis</li><li>Nama tamu personal</li><li>Hitung mundur &amp; simpan ke kalender</li><li>Tombol Google Maps</li><li>Galeri 4 foto</li><li>RSVP via WhatsApp</li><li>Aktif 3 bulan · 1× revisi</li></ul><a class="btn ghost" href="https://wa.me/6281326549861?text=Halo%20Titikbersama%2C%20saya%20mau%20pesan%20undangan%20digital%20paket%20Basic." target="_blank" rel="noopener">Pilih Basic</a></div><div class="pkg best"><span class="badge">Paling laris</span>
     <h3>Standar</h3><p class="price">Rp99.000</p><p class="note">Paling banyak dipilih</p>
-    <ul><li>Semua isi Basic</li><li>Musik latar &amp; preview peta</li><li>Galeri 12 foto &amp; kisah cinta</li><li>Amplop digital (rekening/e-wallet)</li><li>Ucapan &amp; doa tampil di undangan</li><li>Rekap RSVP di Google Sheet</li><li>Aktif 6 bulan · 2× revisi</li></ul><a class="btn" href="https://wa.me/6281326549861?text=Halo%20Titikbersama%2C%20saya%20mau%20pesan%20undangan%20digital%20paket%20Standar." target="_blank" rel="noopener">Pilih Standar</a></div><div class="pkg">
+    <ul><li>Semua isi Basic</li><li>Ilustrasi kustom mirip kalian (tema ilustrasi), gratis</li><li>Musik latar &amp; preview peta</li><li>Galeri 12 foto &amp; kisah cinta</li><li>Amplop digital (rekening/e-wallet)</li><li>Ucapan &amp; doa tampil di undangan</li><li>Rekap RSVP di Google Sheet</li><li>Aktif 6 bulan · 2× revisi</li></ul><a class="btn" href="https://wa.me/6281326549861?text=Halo%20Titikbersama%2C%20saya%20mau%20pesan%20undangan%20digital%20paket%20Standar." target="_blank" rel="noopener">Pilih Standar</a></div><div class="pkg">
     <h3>Premium</h3><p class="price">Rp199.000</p><p class="note">Lengkap untuk hari besar</p>
-    <ul><li>Semua isi Standar</li><li>Galeri 30 foto &amp; video prewedding</li><li>Live streaming &amp; QR check-in tamu</li><li>1 lagu custom</li><li>Domain sendiri (.my.id, 1 tahun)</li><li>Aktif 12 bulan · 5× revisi</li><li>Pengerjaan prioritas ±12 jam</li></ul><a class="btn ghost" href="https://wa.me/6281326549861?text=Halo%20Titikbersama%2C%20saya%20mau%20pesan%20undangan%20digital%20paket%20Premium." target="_blank" rel="noopener">Pilih Premium</a></div></div>
+    <ul><li>Semua isi Standar</li><li>Ilustrasi kustom mirip kalian (tema ilustrasi), gratis</li><li>Galeri 30 foto &amp; video prewedding</li><li>Live streaming &amp; QR check-in tamu</li><li>1 lagu custom</li><li>Domain sendiri (.my.id, 1 tahun)</li><li>Aktif 12 bulan · 5× revisi</li><li>Pengerjaan prioritas ±12 jam</li></ul><a class="btn ghost" href="https://wa.me/6281326549861?text=Halo%20Titikbersama%2C%20saya%20mau%20pesan%20undangan%20digital%20paket%20Premium." target="_blank" rel="noopener">Pilih Premium</a></div></div>
   <p class="small">Tersedia add-on: musik, preview peta, tambah foto, QR check-in, domain .com, pengerjaan express, dan lainnya.</p>
 </div></section>
 
@@ -405,7 +433,7 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 
 <section id="faq"><div class="wrap">
   <p class="eyebrow">Tanya jawab</p><h2>Yang sering ditanyakan</h2>
-  <div class="faq"><details><summary>Berapa lama pengerjaannya?</summary><p>1×24 jam setelah data lengkap kami terima. Paket Premium diprioritaskan (±12 jam).</p></details><details><summary>Apakah nama tamu bisa berbeda-beda?</summary><p>Bisa. Setiap tamu mendapat link sendiri, dan namanya tampil di cover undangan.</p></details><details><summary>Bisa ganti warna atau tema?</summary><p>Warna bisa disesuaikan (Premium, atau add-on untuk paket lain). Ganti tema setelah jadi dihitung pesanan baru.</p></details><details><summary>Musiknya bisa lagu pilihan sendiri?</summary><p>Bisa. Premium gratis 1 lagu, paket lain dengan add-on. Kami sarankan lagu bebas royalti agar link tidak diblokir.</p></details><details><summary>Foto di demo ini foto siapa?</summary><p>Foto contoh untuk memperlihatkan tampilan. Undanganmu memakai foto kalian sendiri.</p></details></div>
+  <div class="faq"><details><summary>Berapa lama pengerjaannya?</summary><p>1×24 jam setelah data lengkap kami terima. Paket Premium diprioritaskan (±12 jam).</p></details><details><summary>Ilustrasi kartunnya bayar lagi?</summary><p>Tidak, gratis di semua paket. Untuk tema ilustrasi (Sage Garden, Tulip Card, Blush Line, Wavy Ink, Kraft Cartoon, Pixel Quest) kami gambar ulang kalian dari foto, lengkap dengan busana adat atau gaun pilihan. Cukup kirim 1 foto berdua dan foto close-up wajah.</p></details><details><summary>Apakah nama tamu bisa berbeda-beda?</summary><p>Bisa. Setiap tamu mendapat link sendiri, dan namanya tampil di cover undangan.</p></details><details><summary>Bisa ganti warna atau tema?</summary><p>Warna bisa disesuaikan (Premium, atau add-on untuk paket lain). Ganti tema setelah jadi dihitung pesanan baru.</p></details><details><summary>Musiknya bisa lagu pilihan sendiri?</summary><p>Bisa. Premium gratis 1 lagu, paket lain dengan add-on. Kami sarankan lagu bebas royalti agar link tidak diblokir.</p></details><details><summary>Foto di demo ini foto siapa?</summary><p>Foto contoh untuk memperlihatkan tampilan. Undanganmu memakai foto kalian sendiri.</p></details></div>
 </div></section>
 
 <div class="wrap"><div class="end"><h2>Sudah menemukan yang cocok?</h2><p>Kirim nama tema pilihanmu, kami bantu sampai undangan siap dibagikan.</p><a class="btn" href="https://wa.me/6281326549861?text=Halo%20Titikbersama%2C%20saya%20mau%20pesan%20undangan%20digital." target="_blank" rel="noopener">Pesan via WhatsApp</a></div></div>
