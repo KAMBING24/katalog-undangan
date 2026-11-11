@@ -80,8 +80,8 @@ h2.l{font-family:'Gloock',serif;text-transform:uppercase;font-size:clamp(19px,6v
 .rv:not(.in) .cal b.on{scale:.2;opacity:0}.cal b.on{transition:scale .7s cubic-bezier(.34,1.8,.64,1) .6s,opacity .3s .6s}
 .rv.in .pr::before{animation:dotp 2.4s ease-in-out infinite;animation-delay:calc(var(--i,0)*.4s)}@keyframes dotp{0%,100%{scale:1}50%{scale:1.7}}
 .pr:nth-child(2)::before{animation-delay:.4s!important}.pr:nth-child(3)::before{animation-delay:.8s!important}.pr:nth-child(4)::before{animation-delay:1.2s!important}
-.rv:not(.in).pn{clip-path:inset(0 100% 0 0)}.pn.rv{transition:opacity .9s ease,translate .9s cubic-bezier(.22,1,.36,1),clip-path 1.1s cubic-bezier(.65,0,.2,1)}.pn.rv.in{clip-path:inset(0 0 0 0)}
-@media (prefers-reduced-motion:reduce){.rv:not(.in) .bigw span{opacity:1!important;transform:none!important}.rv:not(.in) .cal b.on{scale:1!important;opacity:1!important}.rv:not(.in).pn{clip-path:none!important}.fs::before,.fs::after{animation:none!important}}
+/* jangan pakai clip-path pada .pn.rv: IntersectionObserver membaca area terpotong → panel tak pernah tampil */
+@media (prefers-reduced-motion:reduce){.rv:not(.in) .bigw span{opacity:1!important;transform:none!important}.rv:not(.in) .cal b.on{scale:1!important;opacity:1!important}.fs::before,.fs::after{animation:none!important}}
 
 </style>
 </head>
@@ -623,7 +623,7 @@ Undangan.register('olive', {
   },
 
   /* Gerak: huruf raksasa naik satu per satu dari balik blok hijau, lingkaran di tanggal kalender "mengetuk" membesar, titik-titik program
-     berdenyut bergiliran, strip film bergulir pelan (lubang perforasi bergerak), panel tersingkap dari kiri. Mati bila reduce-motion. */
+     berdenyut bergiliran, strip film bergulir pelan (lubang perforasi bergerak). Mati bila reduce-motion. */
   after(root) {
     Undangan.splitWords(root, '.nm, .dt, .body, .sub, .scr, .l, .pp h3, .ev-t, .ev-d, .ev-h, .ev-p, .st h3, .st .yr, .nd h3, .nd p, .dc p, .to, .gn, .pr span, .pr b',
       el => el.closest('form') || el.closest('.count') || el.closest('button') || el.closest('a'));
