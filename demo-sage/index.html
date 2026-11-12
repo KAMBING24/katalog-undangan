@@ -272,8 +272,73 @@ const CONFIG = {
       });
     },
 
+    /* DEMO SAJA: calon pembeli mencoba nama & tanggal sendiri lewat link ?n1=Budi&n2=Ani&tgl=2027-05-20.
+       Semua teks yang memuat nama/tanggal lama diganti (nama lengkap, hashtag, rekening, tanggal acara).
+       Tidak berlaku untuk undangan klien asli (C.demo kosong) → link klien tidak bisa diubah orang lain. */
+    tryNames(C) {
+      const q = new URLSearchParams(location.search);
+      const clean = v => (v || '').replace(/[<>"&]/g, '').replace(/\s+/g, ' ').trim().slice(0, 24);
+      const n1 = clean(q.get('n1')), n2 = clean(q.get('n2')), tgl = q.get('tgl') || '';
+      const reps = [];
+      const fmt = iso => new Intl.DateTimeFormat('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: C.timezone }).format(new Date(iso));
+      if (/^\d{4}-\d{2}-\d{2}$/.test(tgl) && !isNaN(new Date(tgl))) {
+        const iso = tgl + 'T' + String(C.eventISO).split('T')[1];
+        if (!isNaN(new Date(iso))) {
+          reps.push([fmt(C.eventISO), fmt(iso)]);
+          if (C.hashtag) C.hashtag = C.hashtag.split(String(C.eventISO).slice(0, 4)).join(tgl.slice(0, 4));   // #NadiaArya2026 → tahun baru
+          C.eventISO = iso;
+        }
+      }
+      const name = (k, v) => {
+        if (!v) return;
+        const old = C['name' + k], full = C['fullName' + k];
+        if (full) reps.push([full, v]);                                   // nama lengkap lama → nama baru
+        if (old) reps.push([old, v], [old.toLowerCase(), v.toLowerCase().replace(/[^a-z0-9]/g, '')]);
+        C['name' + k] = v; C['fullName' + k] = v;
+      };
+      const o1 = C.name1, o2 = C.name2;
+      name(1, n1); name(2, n2);
+      if (!reps.length) return;
+      if (n1 || n2) reps.unshift([`${o1}${o2}`, `${C.name1.split(' ')[0]}${C.name2.split(' ')[0]}`]);   // hashtag #NadiaArya2026 → kata pertama saja (hashtag panjang tidak bisa dipatah & melebarkan halaman)
+      const walk = v => typeof v === 'string' ? reps.reduce((s, [a, b]) => a ? s.split(a).join(b) : s, v)
+        : Array.isArray(v) ? v.map(walk) : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, walk(x)])) : v;
+      ['coupleNames', 'hashtag', 'banks', 'events', 'story', 'closingText', 'tagline', 'giftAddress', 'dateDisplay', 'instagram1', 'instagram2', 'shareMessage'].forEach(k => { if (C[k] != null) C[k] = walk(C[k]); });
+      C.__tried = true;
+    },
+
+    /* tombol "Coba nama kalian" di halaman demo → form kecil → muat ulang dengan ?n1&n2&tgl (parameter ?to dipertahankan) */
+    demoPill(C) {
+      const b = document.createElement('div'); b.className = 'demo-try';
+      const q = new URLSearchParams(location.search);
+      b.innerHTML = `<button type="button" class="dt-open">✎ ${C.__tried ? 'Ganti nama' : 'Coba nama kalian'}</button>
+        <form class="dt-form" hidden><b>Lihat dengan nama kalian</b>
+          <label>Nama pria<input name="n1" maxlength="24" placeholder="mis. Budi" value="${q.get('n1') ? C.name1 : ''}"></label>
+          <label>Nama wanita<input name="n2" maxlength="24" placeholder="mis. Ani" value="${q.get('n2') ? C.name2 : ''}"></label>
+          <label>Tanggal acara (opsional)<input name="tgl" type="date" value="${(q.get('tgl') || '').replace(/[^0-9-]/g, '')}"></label>
+          <div><button type="submit">Tampilkan</button><button type="button" class="dt-x">Tutup</button></div></form>`;
+      const css = document.createElement('style');
+      css.textContent = `.demo-try{position:fixed;left:10px;top:calc(10px + env(safe-area-inset-top));z-index:120;font:500 13px/1.3 system-ui,-apple-system,Segoe UI,sans-serif;color:#222}
+.demo-try .dt-open{border:0;border-radius:999px;padding:8px 13px;background:rgba(255,255,255,.92);color:#222;box-shadow:0 4px 14px rgba(0,0,0,.25);cursor:pointer;font:inherit;font-weight:600}
+.demo-try form{margin-top:8px;width:min(280px,calc(100vw - 20px));padding:14px;border-radius:14px;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.3);display:grid;gap:9px}
+.demo-try form[hidden]{display:none}.demo-try label{display:grid;gap:3px;font-size:12px;color:#555;letter-spacing:0;text-transform:none;margin:0}
+.demo-try input{font:inherit;font-size:15px;color:#222;border:1px solid #ccc;border-radius:8px;padding:8px 10px;min-height:40px;background:#fff;width:100%}
+.demo-try form div{display:flex;gap:8px}.demo-try form button{flex:1;border:0;border-radius:8px;padding:10px;font:inherit;font-weight:700;cursor:pointer;background:#222;color:#fff}.demo-try .dt-x{background:#eee;color:#222}`;
+      document.head.appendChild(css); document.body.appendChild(b);
+      const f = b.querySelector('form');
+      b.querySelector('.dt-open').onclick = () => { f.hidden = !f.hidden; if (!f.hidden) f.n1.focus(); };
+      b.querySelector('.dt-x').onclick = () => { f.hidden = true; };
+      f.onsubmit = e => {
+        e.preventDefault();
+        const p = new URLSearchParams(location.search);
+        ['n1', 'n2', 'tgl'].forEach(k => { const v = f[k].value.trim(); v ? p.set(k, v) : p.delete(k); });
+        try { localStorage.setItem('tb-try', JSON.stringify({ n1: f.n1.value.trim(), n2: f.n2.value.trim(), tgl: f.tgl.value })); } catch (err) { /* penyimpanan diblokir */ }
+        location.search = p.toString();
+      };
+    },
+
     start(userC) {
       const C = Object.assign({}, DEFAULTS, userC);
+      if (C.demo) this.tryNames(C);
       const root = document.getElementById('u-root');
       const slug = C.slug || window.__SLUG || 'undangan';
       const P = PACKAGES[C.package] || PACKAGES.basic;
@@ -445,6 +510,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         document.head.insertBefore(b, document.head.firstChild);
       }
       if (theme.after) theme.after(root, C, H);
+      if (C.demo && !new URLSearchParams(location.search).has('shot')) this.demoPill(C);
 
       /* ---------------- perilaku ---------------- */
       const toast = t => { const el = $('#toast'); el.textContent = t; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 1800); };

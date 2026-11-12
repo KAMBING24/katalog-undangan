@@ -44,6 +44,15 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
 /* katalog */
 section{padding:56px 0;scroll-margin-top:64px}
 .head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:22px}
+.try{background:var(--paper);border:1.5px solid var(--line);border-radius:var(--r);padding:16px;margin:0 0 18px;box-shadow:var(--shadow);display:grid;gap:10px}
+.try .tt{margin:0;display:grid;gap:2px}.try .tt b{font-size:16px}.try .tt span{font-size:13.5px;color:var(--muted)}
+.try .tf{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}.try .tf span{font:italic 500 22px "Cormorant Garamond",serif;color:var(--accent)}
+.try input{width:100%;min-height:46px;font:500 16px "Plus Jakarta Sans",sans-serif;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:0 12px}
+.try input:focus{outline:none;border-color:var(--accent)}
+.try .tf2{display:flex;gap:10px;align-items:end;flex-wrap:wrap}.try .tf2 label{flex:1 1 150px;display:grid;gap:4px;font-size:13px;font-weight:600;color:var(--muted)}.try .tf2 small{font-weight:400}
+.try .tf2 .btn{flex:1 1 180px;min-height:46px}
+.tok{margin:0;font-size:14px;font-weight:600;color:var(--accent);background:var(--accent-2);border-radius:10px;padding:9px 12px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.tok button{border:0;background:none;color:var(--accent);font:700 13px "Plus Jakarta Sans",sans-serif;text-decoration:underline;cursor:pointer;padding:4px}
 .chips{position:sticky;top:64px;z-index:10;display:flex;gap:8px;overflow-x:auto;padding:12px 16px;margin:0 -16px 20px;background:linear-gradient(var(--bg) 80%,rgba(247,242,236,0));scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex:none;min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);font:600 14px "Plus Jakarta Sans",sans-serif;cursor:pointer;transition:background .2s,border-color .2s}
@@ -117,6 +126,10 @@ footer{padding:0 0 calc(32px + env(safe-area-inset-bottom));color:var(--muted);f
 
 <section id="tema"><div class="wrap">
   <div class="head"><div><p class="eyebrow">Katalog tema</p><h2>Pilih gaya undanganmu</h2><p class="lead">Ketuk sebuah tema untuk membuka demo lengkapnya, persis seperti yang akan dilihat tamu di HP.</p></div></div>
+  <form class="try" id="try" autocomplete="off"><p class="tt"><b>✎ Coba dengan nama kalian</b><span>Ketik nama kalian, lalu semua demo tampil dengan nama dan tanggal kalian.</span></p>
+    <div class="tf"><input name="n1" placeholder="Nama pria" maxlength="24" aria-label="Nama mempelai pria"><span aria-hidden="true">&amp;</span><input name="n2" placeholder="Nama wanita" maxlength="24" aria-label="Nama mempelai wanita"></div>
+    <div class="tf2"><label>Tanggal <small>(opsional)</small><input name="tgl" type="date"></label><button class="btn" type="submit">Terapkan ke semua demo</button></div>
+    <p class="tok" id="tok" hidden></p></form>
   <div class="chips" role="toolbar" aria-label="Saring tema">
     <button class="chip" type="button" data-f="" data-d="Semua tema yang tersedia. Ketuk salah satu gaya untuk menyaring." aria-pressed="true">Semua<small>33</small></button>
     <button class="chip" type="button" data-f="Adat Nusantara" data-d="Nuansa adat daerah: motif kain, ornamen khas, dan salam bahasa daerah. Bali, Jawa, Sunda, Minang, Batak, Bugis, Betawi, Palembang." aria-pressed="false">Adat Nusantara<small>8</small></button><button class="chip" type="button" data-f="Elegan Klasik" data-d="Lembut dan anggun: warna krem, serif klasik, cocok untuk acara formal." aria-pressed="false">Elegan Klasik<small>7</small></button><button class="chip" type="button" data-f="Minimalis" data-d="Bersih dan sederhana: sedikit warna, banyak ruang kosong, fokus pada tulisan." aria-pressed="false">Minimalis<small>4</small></button><button class="chip" type="button" data-f="Foto Prewedding" data-d="Menonjolkan foto prewedding kalian: foto besar di cover dan galeri." aria-pressed="false">Foto Prewedding<small>22</small></button><button class="chip" type="button" data-f="Ilustrasi Kartun" data-d="Pasangan digambar jadi kartun mirip kalian dari foto. Ilustrasi kustom GRATIS di semua paket." aria-pressed="false">Ilustrasi Kartun<small>8</small></button><button class="chip" type="button" data-f="Unik &amp; Retro" data-d="Konsep tak biasa: koran, poster film, polaroid, kolase zine, sampai game pixel." aria-pressed="false">Unik &amp; Retro<small>8</small></button>
@@ -557,5 +570,19 @@ chips.forEach(c=>c.addEventListener('click',()=>{const f=c.dataset.f;let n=0;
   cards.forEach(k=>{const on=!f||k.dataset.moods.split('|').includes(f);k.hidden=!on;if(on)n++});
   count.textContent=n+' tema ditampilkan';
   const g=document.getElementById('tema');if(g.getBoundingClientRect().top<0)g.scrollIntoView({block:'start'});}));
+
+/* coba nama sendiri: simpan di localStorage (dibagi dengan halaman demo), tempel ?n1&n2&tgl ke semua link demo */
+const tf=document.getElementById('try'),tok=document.getElementById('tok');
+const load=()=>{try{return JSON.parse(localStorage.getItem('tb-try')||'{}')}catch(e){return{}}};
+const save=v=>{try{localStorage.setItem('tb-try',JSON.stringify(v))}catch(e){}};
+const apply=v=>{
+  document.querySelectorAll('a[href*="/index.html?"]').forEach(a=>{const u=new URL(a.href);['n1','n2','tgl'].forEach(k=>v[k]?u.searchParams.set(k,v[k]):u.searchParams.delete(k));a.href=u.href});
+  const on=v.n1||v.n2;tok.hidden=!on;
+  if(on){const d=v.tgl?' · '+new Date(v.tgl+'T00:00').toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):'';
+    tok.innerHTML='';const t=document.createElement('span');t.textContent='Demo tampil sebagai '+[v.n1||'…',v.n2||'…'].join(' & ')+d;
+    const x=document.createElement('button');x.type='button';x.textContent='Hapus';x.onclick=()=>{save({});tf.reset();apply({})};tok.append(t,x)}};
+const v0=load();['n1','n2','tgl'].forEach(k=>{if(v0[k])tf[k].value=v0[k]});apply(v0);
+tf.addEventListener('submit',e=>{e.preventDefault();const v={n1:tf.n1.value.trim().slice(0,24),n2:tf.n2.value.trim().slice(0,24),tgl:tf.tgl.value};save(v);apply(v);
+  tf.querySelector('.btn').textContent='✓ Diterapkan';setTimeout(()=>tf.querySelector('.btn').textContent='Terapkan ke semua demo',1600)});
 </script>
 </body></html>
