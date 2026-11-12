@@ -167,7 +167,7 @@ const CONFIG = {
   rsvpPhone: "6281326549861",
   closingText: "Merupakan kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.",
   hashtag: "#NadiaArya2026",
-  musicURL: ""              // mis. "musik/lagu.mp3" (pakai musik bebas royalti)
+  musicURL: "../musik/demo.mp3"            // mis. "musik/lagu.mp3" (pakai musik bebas royalti)
 };
 
 </script>
@@ -180,8 +180,55 @@ const CONFIG = {
 ===================================================================== */
 (function () {
   /* ---------------- PAKET & FITUR ---------------- */
-  const BASIC = ['quote', 'couple', 'events', 'gallery', 'rsvp'];
-  const STANDAR = BASIC.concat(['details', 'story', 'gift', 'wishes', 'music', 'map', 'track']);
+  const BASIC = ['quote', 'couple', 'events', 'gallery', 'rsvp', 'music'];
+  const STANDAR = BASIC.concat(['details', 'story', 'gift', 'wishes', 'map', 'track']);
+  /* desain pemutar musik melayang per tema (CSS di PLAYER_CSS); config musicPlayer / tema player: menimpa */
+  const PLAYER = { mono: 'doodle', doodle: 'doodle', line: 'doodle', wavy: 'doodle', sage: 'flower', tulip: 'flower', olive: 'flower',
+    pearl: 'vinyl', editorial: 'vinyl', arch: 'pill', numeral: 'pill', envelope: 'stamp', news: 'stamp', torn: 'stamp', cartoon: 'stamp',
+    photostrip: 'film', poster: 'film', polaroid: 'cassette', collage: 'cassette', pixel: 'pixel', platform: 'pixel',
+    adat: 'ornament', bali: 'ornament', jawa: 'ornament', sunda: 'ornament' };
+  const PLAYER_CSS = `
+#music.music{position:fixed;right:14px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:60;display:none;align-items:center;justify-content:center;gap:7px;
+  padding:0;margin:0;border:0;cursor:pointer;font:700 13px/1 system-ui,sans-serif;color:var(--mp-fg);background:var(--mp-bg);width:50px;height:50px;border-radius:50%;
+  box-shadow:0 6px 18px rgba(0,0,0,.25);-webkit-tap-highlight-color:transparent;transition:transform .2s;animation:none;rotate:0deg}
+#music.music.show{display:flex}#music.music:active{transform:scale(.92)}#music.music:focus-visible{outline:3px solid var(--mp-ac);outline-offset:3px}
+#music .mp-i{font-size:20px;line-height:1;position:relative;z-index:2}#music .mp-t{display:none}
+#music .mp-eq{display:none;align-items:flex-end;gap:2px;height:14px}#music .mp-eq b{width:3px;height:4px;background:currentColor;border-radius:1px}
+#music.on .mp-eq b{animation:mpEq .9s ease-in-out infinite}#music.on .mp-eq b:nth-child(2){animation-delay:-.3s}#music.on .mp-eq b:nth-child(3){animation-delay:-.6s}
+@keyframes mpEq{0%,100%{height:4px}50%{height:14px}}@keyframes mpSpin{to{rotate:360deg}}@keyframes mpWig{0%,100%{rotate:-8deg}50%{rotate:8deg}}
+@keyframes mpBob{0%,100%{translate:0 0}50%{translate:0 -5px}}@keyframes mpGlow{0%,100%{box-shadow:0 0 0 0 var(--mp-ac)}50%{box-shadow:0 0 0 7px transparent}}
+#music:not(.on) .mp-i::after{content:"";position:absolute;left:-3px;right:-3px;top:50%;height:2px;background:currentColor;rotate:-40deg}
+/* piringan hitam */
+#music.mp-vinyl{background:repeating-radial-gradient(circle,#161616 0 2px,#262626 2px 4px);color:#fff}
+#music.mp-vinyl::before{content:"";position:absolute;inset:15px;border-radius:50%;background:var(--mp-ac)}
+#music.mp-vinyl .mp-i{font-size:13px;color:var(--mp-bg)}#music.mp-vinyl.on{animation:mpSpin 3s linear infinite}
+/* kapsul + equalizer */
+#music.mp-pill{width:auto;height:40px;padding:0 16px 0 14px;border-radius:999px;background:var(--mp-fg);color:var(--mp-bg)}
+#music.mp-pill .mp-i{display:none}#music.mp-pill .mp-eq,#music.mp-pill .mp-t{display:flex}
+/* coretan tangan */
+#music.mp-doodle{border-radius:58% 42% 55% 45%/45% 55% 45% 55%;border:2.5px solid var(--mp-fg);box-shadow:3px 4px 0 var(--mp-fg)}#music.mp-doodle.on{animation:mpWig 1.2s ease-in-out infinite}
+/* bunga */
+#music.mp-flower{background:radial-gradient(circle at 28px 28px,var(--mp-bg) 0 10px,transparent 10.5px),radial-gradient(circle at 45px 28px,var(--mp-ac) 0 10px,transparent 10.5px),radial-gradient(circle at 36.5px 42.7px,var(--mp-ac) 0 10px,transparent 10.5px),radial-gradient(circle at 19.5px 42.7px,var(--mp-ac) 0 10px,transparent 10.5px),radial-gradient(circle at 11px 28px,var(--mp-ac) 0 10px,transparent 10.5px),radial-gradient(circle at 19.5px 13.3px,var(--mp-ac) 0 10px,transparent 10.5px),radial-gradient(circle at 36.5px 13.3px,var(--mp-ac) 0 10px,transparent 10.5px);border-radius:0;box-shadow:none;filter:drop-shadow(0 3px 6px rgba(0,0,0,.28));width:56px;height:56px}
+#music.mp-flower .mp-i{font-size:16px;color:var(--mp-fg)}#music.mp-flower.on{animation:mpSpin 8s linear infinite}
+/* perangko */
+#music.mp-stamp{width:52px;height:60px;padding:4px;border-radius:0;rotate:-6deg;background:var(--mp-ac);color:var(--mp-bg);box-shadow:none;flex-direction:column;gap:3px;-webkit-mask:linear-gradient(#000 0 0) content-box,radial-gradient(circle,#000 2.6px,transparent 3px) 0 0/8px 8px round;mask:linear-gradient(#000 0 0) content-box,radial-gradient(circle,#000 2.6px,transparent 3px) 0 0/8px 8px round}
+#music.mp-stamp::before{content:"";position:absolute;inset:8px;border:1.5px dashed var(--mp-bg)}#music.mp-stamp .mp-t{display:block;font-size:7px;letter-spacing:.12em;text-transform:uppercase}#music.mp-stamp.on{animation:mpBob 1.6s ease-in-out infinite}
+/* gulungan film */
+#music.mp-film{background:radial-gradient(circle,var(--mp-fg) 0 15%,transparent 16%),radial-gradient(circle at 50% 22%,var(--mp-bg) 0 10%,transparent 11%),radial-gradient(circle at 50% 78%,var(--mp-bg) 0 10%,transparent 11%),radial-gradient(circle at 24% 38%,var(--mp-bg) 0 10%,transparent 11%),radial-gradient(circle at 76% 38%,var(--mp-bg) 0 10%,transparent 11%),radial-gradient(circle at 24% 66%,var(--mp-bg) 0 10%,transparent 11%),radial-gradient(circle at 76% 66%,var(--mp-bg) 0 10%,transparent 11%),var(--mp-fg);border:3px solid var(--mp-bg);outline:2px solid var(--mp-fg)}
+#music.mp-film .mp-i{display:none}#music.mp-film.on{animation:mpSpin 2.4s linear infinite}#music.mp-film:not(.on){opacity:.75}
+/* kaset */
+#music.mp-cassette{width:66px;height:44px;border-radius:7px;background:var(--mp-fg);color:var(--mp-bg)}
+#music.mp-cassette::before{content:"";position:absolute;left:9px;right:9px;top:9px;height:15px;border-radius:8px;background:var(--mp-bg)}
+#music.mp-cassette .mp-i{display:none}#music.mp-cassette .mp-eq{display:flex;position:absolute;bottom:4px;height:9px}#music.mp-cassette .mp-eq b{width:2px}
+#music.mp-cassette::after{content:"";position:absolute;top:11px;left:14px;width:11px;height:11px;border-radius:50%;border:2.5px dotted var(--mp-fg);box-shadow:27px 0 0 -2.5px var(--mp-bg),27px 0 0 0 var(--mp-fg)}
+#music.mp-cassette.on::after{animation:mpSpin 1.4s linear infinite}
+/* piksel */
+#music.mp-pixel{border-radius:0;width:46px;height:46px;background:var(--mp-ac);color:#fff;border:4px solid var(--mp-fg);box-shadow:4px 4px 0 var(--mp-fg);font-family:monospace}
+#music.mp-pixel .mp-eq b{border-radius:0;width:4px}#music.mp-pixel.on .mp-i{display:none}#music.mp-pixel.on .mp-eq{display:flex}#music.mp-pixel.on .mp-eq b{animation-timing-function:steps(3)}
+/* ornamen adat */
+#music.mp-ornament{width:44px;height:44px;border-radius:6px;rotate:45deg;background:var(--mp-bg);border:2px solid var(--mp-ac);outline:1.5px solid var(--mp-ac);outline-offset:3px}
+#music.mp-ornament .mp-i{rotate:-45deg;color:var(--mp-ac)}#music.mp-ornament.on{animation:mpGlow 2s ease-out infinite}
+@media (prefers-reduced-motion:reduce){#music.music,#music.music::after,#music .mp-eq b{animation:none!important}}`;
   const PREMIUM = STANDAR.concat(['livestream', 'video', 'qr']);
   const PACKAGES = {
     basic:   { label: 'Basic',   features: BASIC,   galleryMax: 4 },
@@ -411,7 +458,11 @@ const CONFIG = {
             + (has('livestream') && C.livestreamURL ? blink(C.livestreamURL, '▶ Live Streaming') : '');
         },
         story: () => has('story') && C.story.length ? `<div class="st">${C.story.map(s => `<div class="it"><div class="yr">${esc(s.date)}</div><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></div>`).join('')}</div>` : '',
-        details: () => has('details') && C.details.length ? C.details.map(x => `<div class="det"><h3>${esc(x.h)}</h3><p>${esc(x.t)}</p></div>`).join('') : '',
+        /* butir "Dress Code" dilewati bila C.dressCode diisi (sudah tampil di blok dresscode → tidak dobel) */
+        details: () => {
+          const list = has('details') ? (C.details || []).filter(x => !(C.dressCode && /dress\s*-?\s*code/i.test(x.h || ''))) : [];
+          return list.length ? list.map(x => `<div class="det"><h3>${esc(x.h)}</h3><p>${esc(x.t)}</p></div>`).join('') : '';
+        },
         gallery: () => has('gallery') && gal.length ? `<div class="gal">${gal.map(g => `<div class="g" data-src="${esc(g)}">${img(g, 'Galeri')}</div>`).join('')}</div>` : '',
         video: () => has('video') && ytEmbed(C.videoURL) ? `<div class="vid"><iframe src="${ytEmbed(C.videoURL)}" allowfullscreen loading="lazy" title="Video"></iframe></div>` : '',
         gift: () => has('gift') && (C.banks.length || C.giftAddress) ? `<p class="intro">${esc(C.giftIntro)}</p>`
@@ -452,7 +503,7 @@ const CONFIG = {
       const theme = this.themes[C.theme];
       if (!theme) { root.textContent = 'Tema tidak ditemukan: ' + C.theme; return; }
       root.innerHTML = theme.render(C, H) + `
-        <button class="music" id="music" aria-label="Putar atau jeda musik">♪</button>
+        <button class="music mp-${esc(C.musicPlayer || theme.player || PLAYER[C.theme] || 'doodle')}" id="music" aria-label="Putar atau jeda musik" aria-pressed="false"><span class="mp-i">♪</span><i class="mp-eq"><b></b><b></b><b></b></i><span class="mp-t">Musik</span></button>
         <audio id="audio" loop preload="none"></audio>
         <div class="lightbox" id="lb" role="dialog" aria-modal="true" aria-label="Foto galeri"><img alt=""></div>
         <div class="toast" id="toast" role="status" aria-live="polite"></div>`;
@@ -491,10 +542,24 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
       /* buka cover */
       const cover = $('[data-cover]'), audio = $('#audio'), music = $('#music');
       document.body.style.overflow = cover ? 'hidden' : '';
-      if (has('music') && C.musicURL) { audio.src = C.musicURL; music.classList.add('show'); }
+      if (has('music') && C.musicURL) {
+        audio.src = C.musicURL; music.classList.add('show');
+        if (!$('#umusic')) { const st = document.createElement('style'); st.id = 'umusic'; st.textContent = PLAYER_CSS; document.head.appendChild(st); }
+        /* warna pemutar ikut tema: latar & teks halaman + warna tombol pertama (bisa ditimpa --mp-bg/--mp-fg/--mp-ac di CSS tema) */
+        const css = getComputedStyle(document.body), clear = c => !c || /rgba\(0, 0, 0, 0\)|transparent/.test(c);
+        const btn = $$('.btn, button:not(#music)').map(b => getComputedStyle(b).backgroundColor).find(c => !clear(c));
+        const bg = clear(css.backgroundColor) ? getComputedStyle(document.documentElement).backgroundColor : css.backgroundColor;
+        const own = v => getComputedStyle(music).getPropertyValue(v).trim();
+        if (!own('--mp-bg')) music.style.setProperty('--mp-bg', clear(bg) ? '#fff' : bg);
+        if (!own('--mp-fg')) music.style.setProperty('--mp-fg', css.color || '#111');
+        if (!own('--mp-ac')) music.style.setProperty('--mp-ac', btn || css.color || '#111');
+      }
+      /* tombol mengikuti status audio sebenarnya (play/pause dari mana pun) */
+      const sync = () => { const on = !audio.paused; music.classList.toggle('on', on); music.setAttribute('aria-pressed', on); $('.mp-t', music).textContent = on ? 'Musik' : 'Putar'; };
+      audio.addEventListener('play', sync); audio.addEventListener('pause', sync);
       music.onclick = () => {
-        if (audio.paused) audio.play().then(() => music.classList.add('on')).catch(() => toast('Musik tidak bisa diputar'));
-        else { audio.pause(); music.classList.remove('on'); }
+        if (audio.paused) audio.play().catch(() => toast('Musik tidak bisa diputar'));
+        else audio.pause();
       };
       /* hemat baterai/kuota: jeda musik saat tab disembunyikan, lanjut bila tadinya menyala */
       let resume = false;
@@ -510,7 +575,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
           cover.classList.add('opened');
           setTimeout(() => { cover.classList.add('hide'); document.body.style.overflow = ''; window.scrollTo(0, 0); startReveal(); }, +(cover.dataset.delay || 0));
         } else startReveal();
-        if (has('music') && C.musicURL) audio.play().then(() => music.classList.add('on')).catch(() => {});
+        if (has('music') && C.musicURL) audio.play().catch(() => {});
         if (has('track') && hasGuest) post({ type: 'open', name: guest });
       }));
 
