@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Check-in Tamu</title>
+<style>
+  *{box-sizing:border-box}body{margin:0;font:18px/1.4 system-ui,sans-serif;background:#111;color:#fff;padding:16px;max-width:520px;margin:auto}
+  h1{font-size:22px}input{width:100%;padding:12px;font-size:16px;border-radius:8px;border:1px solid #555;background:#222;color:#fff;margin:6px 0}
+  button{padding:12px 18px;min-height:44px;font-size:16px;border:0;border-radius:8px;background:#58704f;color:#fff;cursor:pointer;margin:4px 4px 4px 0}
+  #reader{width:100%;margin:12px 0;border-radius:10px;overflow:hidden}
+  #res{margin:12px 0;padding:18px;border-radius:12px;background:#222;text-align:center;min-height:90px}
+  #res b{display:block;font-size:28px;margin-top:4px;word-break:break-word}.ok{background:#1e5a2e!important}.bad{background:#6a2222!important}.warn{background:#7a5a10!important}
+  small{color:#aaa}ul{padding-left:20px}#cnt{font-size:15px;color:#9c9}#q{color:#fc6;font-size:14px}
+</style>
+</head>
+<body>
+<h1>📷 Check-in Tamu</h1>
+<small>Isi sekali (tersimpan di perangkat ini), lalu pindai QR tamu.</small>
+<input id="ep" placeholder="URL Apps Script: https://script.google.com/macros/s/.../exec" autocomplete="off">
+<input id="slug" placeholder="slug undangan, mis. nadia-arya" autocomplete="off">
+<input id="key" type="password" placeholder="Kunci check-in (sama dengan setKunciCheckin)" autocomplete="off">
+<button id="start">Mulai Scan</button><button id="stop">Stop</button>
+<div id="reader"></div>
+<div id="res" role="status" aria-live="polite">Menunggu pindaian…</div>
+<div id="cnt"></div><div id="q"></div>
+<h3>Atau cari manual</h3>
+<input id="manual" placeholder="Ketik nama tamu (persis seperti di daftar)"><button id="manualBtn">Check-in</button>
+<h3>Riwayat sesi ini</h3><ul id="log"></ul>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const store = (k, v) => { try { if (v === undefined) return localStorage.getItem(k) || ''; localStorage.setItem(k, v); } catch { return ''; } };
+$('ep').value = store('ci_ep'); $('slug').value = store('ci_slug'); $('key').value = store('ci_key');
+let scanner, last = '', lastAt = 0;
+
+/* antrean offline: bila sinyal hilang di lokasi, check-in disimpan & dikirim ulang otomatis */
+const getQ = () => { try { return JSON.parse(store('ci_q') || '[]'); } catch { return []; } };
+const setQ = q => { store('ci_q', JSON.stringify(q)); $('q').textContent = q.length ? `⏳ ${q.length} check-in menunggu sinyal (dikirim otomatis)` : ''; };
+
+function show(cls, label, name) {
+  const res = $('res'); res.className = cls; res.textContent = label;
+  if (name) { const b = document.createElement('b'); b.textContent = name; res.appendChild(b); }
+}
+function log(text) { const li = document.createElement('li'); li.textContent = `${new Date().toLocaleTimeString('id-ID')} — ${text}`; $('log').prepend(li); }
+const fmtTime = ms => new Date(ms).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+async function send(item) {
+  const u = new URL(item.ep);
+  u.search = new URLSearchParams({ type: 'checkin', slug: item.slug, name: item.name, key: item.key }).toString();
+  const r = await fetch(u, { redirect: 'follow' });
+  return r.json();
+}
+
+async function checkin(name, slug) {
+  const ep = $('ep').value.trim(), key = $('key').value;
+  store('ci_ep', ep); store('ci_slug', $('slug').value.trim()); store('ci_key', key);
+  if (!ep) return show('bad', 'Isi URL Apps Script dulu');
+  if (!slug) return show('bad', 'Isi slug undangan dulu');
+  const item = { ep, slug, name, key };
+  try {
+    const j = await send(item);
+    if (!j.ok) { show('bad', j.error === 'kunci salah' ? 'Kunci check-in salah' : j.error === 'kunci belum dipasang' ? 'Kunci belum dipasang di Apps Script (jalankan setKunciCheckin)' : 'Gagal: ' + (j.error || 'tidak diketahui')); return; }
+    if (j.dup) { show('warn', `SUDAH check-in pukul ${j.at ? fmtTime(j.at) : '?'}`, name); log(`${name} — DOBEL`); if (navigator.vibrate) navigator.vibrate([200, 100, 200]); }
+    else { show('ok', 'Check-in berhasil', name); log(name); if (navigator.vibrate) navigator.vibrate(120); }
+    $('cnt').textContent = j.total != null ? `Sudah check-in: ${j.total} tamu` : '';
+  } catch {
+    const q = getQ(); q.push(item); setQ(q);
+    show('warn', 'Offline — disimpan, dikirim otomatis saat ada sinyal', name); log(`${name} — tertunda`);
+  }
+}
+
+async function flush() {
+  let q = getQ(); if (!q.length) return;
+  const rest = [];
+  for (const it of q) { try { const j = await send(it); if (!j.ok) log(`${it.name} — gagal: ${j.error || '?'}`); } catch { rest.push(it); } }   // ditolak server = tak akan pernah berhasil, jangan diulang
+  setQ(rest);
+}
+window.addEventListener('online', flush); setInterval(flush, 15000); setQ(getQ());
+
+function onScan(text) {
+  if (text === last && Date.now() - lastAt < 4000) return; last = text; lastAt = Date.now();
+  const p = text.split('|');
+  if (p[0] !== 'U1' || p.length < 3) return show('bad', 'QR tidak dikenali');
+  const want = $('slug').value.trim();
+  if (want && p[1] !== want) return show('bad', 'QR untuk undangan lain', p[1]);
+  checkin(p.slice(2).join('|'), p[1]);
+}
+$('start').onclick = () => {
+  if (typeof Html5Qrcode === 'undefined') return show('bad', 'Pustaka pemindai belum termuat — periksa internet');
+  scanner = new Html5Qrcode('reader');
+  scanner.start({ facingMode: 'environment' }, { fps: 10, qrbox: 250 }, onScan).catch(e => show('bad', 'Kamera tidak bisa dibuka: ' + e));
+};
+$('stop').onclick = () => scanner && scanner.stop().catch(() => {});
+$('manualBtn').onclick = () => { const n = $('manual').value.trim(); if (n) { checkin(n, $('slug').value.trim()); $('manual').value = ''; } };
+</script>
+</body>
+</html>
