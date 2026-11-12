@@ -415,7 +415,7 @@ const CONFIG = {
         + '&dates=' + f(d) + '/' + f(en)
         + '&location=' + encodeURIComponent((C.events[0] && (C.events[0].venue || C.events[0].place) + ', ' + C.events[0].address) || '');
 
-      const ytEmbed = u => { const m = String(u || '').match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/); return m ? 'https://www.youtube.com/embed/' + m[1] : ''; };
+      const ytEmbed = u => { const m = String(u || '').match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/); return m ? 'https://www.youtube.com/embed/' + m[1] + '?enablejsapi=1&playsinline=1&rel=0' + (/^https?:/.test(location.origin) ? '&origin=' + encodeURIComponent(location.origin) : '') : ''; };
       /* preview Google Maps (iframe, tanpa API key). Isi `mapQuery` di acara bila ingin pencarian yang lebih tepat. */
       /* Urutan pilihan peta per acara (semua dikunci paket/add-on "map"):
          1. mapImage  = gambar peta sederhana (SVG/PNG/WebP) → dibuat dengan tools/map-sketch.js atau AI. Paling rapi & ringan, tanpa Google.
@@ -567,11 +567,39 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         if (audio.paused) audio.play().catch(() => toast('Musik tidak bisa diputar'));
         else audio.pause();
       };
-      /* hemat baterai/kuota: jeda musik saat tab disembunyikan, lanjut bila tadinya menyala */
+      /* volume naik/turun halus (iOS mengabaikan volume → tetap jeda/lanjut, tanpa fade) */
+      let fadeId = 0;
+      const fade = (to, ms = 700) => new Promise(done => {
+        const id = ++fadeId, from = audio.volume, t0 = performance.now();
+        /* setTimeout, bukan requestAnimationFrame: rAF berhenti di tab latar → fade tak pernah selesai */
+        const step = () => { if (id !== fadeId) return done(); const k = Math.min(1, (performance.now() - t0) / ms); audio.volume = from + (to - from) * k; k < 1 ? setTimeout(step, 30) : done(); };
+        step();
+      });
+      /* video diputar → musik fade out lalu jeda; semua video berhenti → musik lanjut + fade in (hanya bila tadinya menyala) */
+      const playing = new Set(); let ducked = false;
+      const videoState = (key, on) => {
+        on ? playing.add(key) : playing.delete(key);
+        if (playing.size && !audio.paused && !ducked) { ducked = true; fade(0).then(() => { if (playing.size) audio.pause(); else fade(1); }); }
+        else if (!playing.size && ducked) { ducked = false; audio.volume = 0; audio.play().then(() => fade(1)).catch(() => { audio.volume = 1; }); }
+      };
+      $$('video').forEach((v, i) => { const k = 'v' + i; v.addEventListener('play', () => videoState(k, true)); ['pause', 'ended'].forEach(ev => v.addEventListener(ev, () => videoState(k, false))); });
+      /* YouTube (enablejsapi=1): minta iframe mengirim status pemutar lewat postMessage, tanpa memuat skrip API */
+      const yts = $$('iframe[src*="youtube.com/embed/"]');
+      const listen = f => { try { f.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: f.dataset.yt, channel: 'widget' }), '*'); } catch {} };
+      yts.forEach((f, i) => { f.dataset.yt = 'yt' + i; f.addEventListener('load', () => [0, 1000, 3000].forEach(t => setTimeout(() => listen(f), t))); });
+      if (yts.length) window.addEventListener('message', e => {
+        if (!/^https:\/\/www\.youtube(-nocookie)?\.com$/.test(e.origin)) return;
+        let d; try { d = typeof e.data === 'string' ? JSON.parse(e.data) : e.data; } catch { return; }
+        const f = yts.find(x => x.contentWindow === e.source); if (!f || !d) return;
+        const st = d.event === 'onStateChange' ? d.info : d.info && d.info.playerState;
+        if (st === 1 || st === 3) videoState(f.dataset.yt, true);           // 1 main, 3 buffering
+        else if (st === 0 || st === 2) videoState(f.dataset.yt, false);     // 0 selesai, 2 jeda
+      });
+      /* hemat baterai/kuota: jeda musik saat tab disembunyikan, lanjut bila tadinya menyala (dan tidak ada video yang main) */
       let resume = false;
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) { resume = !audio.paused; audio.pause(); }
-        else if (resume) { resume = false; audio.play().catch(() => {}); }
+        else if (resume) { resume = false; if (!playing.size) audio.play().catch(() => {}); }
       });
       let opened = false;
       $$('[data-open]').forEach(b => { if (b.tagName !== 'BUTTON') b.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); b.click(); } }); });
