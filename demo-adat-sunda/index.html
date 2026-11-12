@@ -140,6 +140,21 @@ h2.sc{font-size:clamp(40px,12vw,54px);line-height:1.1}
 @keyframes sgFloat{to{translate:0 -6px;filter:drop-shadow(0 10px 26px rgba(247,231,176,.65))}}
 @keyframes sway{from{rotate:-3deg}to{rotate:3deg}}
 @keyframes rise{0%{opacity:0;translate:0 0}10%{opacity:.9}90%{opacity:.6}100%{opacity:0;translate:14px -105vh}}
+/* ===== kontras (dibaca nyaman di HP): motif diredam di bawah teks, emas lebih gelap di panel terang, teks lebih tegas ===== */
+.sec.dk{background:linear-gradient(rgba(17,23,18,.80),rgba(17,23,18,.80)),radial-gradient(ellipse at 50% 0,rgba(212,171,85,.12),transparent 60%),url(aset/motif.webp) 0 0/220px,var(--dk);color:#f6efdc}
+.sec.lt{background:linear-gradient(rgba(248,242,228,.88),rgba(248,242,228,.88)),url(aset/motif.webp) 0 0/220px,var(--cream);color:#231f14}
+.sec.lt p,.sec.lt .sub,.sec.lt .lead,.sec.lt .ev-p,.sec.lt .it p,.sec.lt .pp p{color:#231f14}
+.sub{opacity:1}.sec.dk .sub,.sec.dk .lead,.sec.dk .qt{color:#f3ead2}
+.sec.lt h2.sc,.sec.lt .nick,.sec.lt .amp,.ev-t,.it h3{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:#8a5f12;filter:none}
+.sec.lt .src,.sec.lt .eb,.it .yr,.ev-h,.pp a,.sec.lt label{color:#7a5410}
+.sec.dk .src,.sec.dk .eb{color:#e8c877}
+.count span,.sd span,.det h3{color:#e8c877}
+.cover .cnote,.cover .to,.cover .eb,.cover .gn,.end .lead,.end .eb{text-shadow:0 1px 3px rgba(0,0,0,.9),0 0 14px rgba(0,0,0,.6)}
+.cover .cnote,.end .lead{color:#fbf5e6}
+.shade{background:linear-gradient(180deg,rgba(10,14,11,.86) 0%,rgba(10,14,11,.62) 34%,rgba(10,14,11,.80) 60%,rgba(10,14,11,.96) 100%)}
+.gbox{background:rgba(0,0,0,.55)}
+h2.sc,.nm,.ev-t,.it h3,.nick,.amp{-webkit-text-stroke:.5px currentColor;paint-order:stroke fill}
+.nm.gold,.sec.dk h2.sc{-webkit-text-stroke:.4px rgba(247,231,176,.5)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.rv .w{opacity:1!important}.rv:not(.in) .crn .c,.rv:not(.in) .kj .k,.rv:not(.in) .arch .frm{opacity:1;translate:none}.rv:not(.in) .div{clip-path:none}}
 
 </style>
