@@ -253,8 +253,8 @@ const CONFIG = {
       const q = new URLSearchParams(location.search);
       b.innerHTML = `<button type="button" class="dt-open">✎ ${C.__tried ? 'Ganti nama' : 'Coba nama kalian'}</button>
         <form class="dt-form" hidden><b>Lihat dengan nama kalian</b>
-          <label>Nama pria<input name="n1" maxlength="24" placeholder="mis. Budi" value="${q.get('n1') ? C.name1 : ''}"></label>
-          <label>Nama wanita<input name="n2" maxlength="24" placeholder="mis. Ani" value="${q.get('n2') ? C.name2 : ''}"></label>
+          <label>Nama wanita<input name="n1" maxlength="24" placeholder="mis. Ani" value="${q.get('n1') ? C.name1 : ''}"></label>
+          <label>Nama pria<input name="n2" maxlength="24" placeholder="mis. Budi" value="${q.get('n2') ? C.name2 : ''}"></label>
           <label>Tanggal acara (opsional)<input name="tgl" type="date" value="${(q.get('tgl') || '').replace(/[^0-9-]/g, '')}"></label>
           <div><button type="submit">Tampilkan</button><button type="button" class="dt-x">Tutup</button></div></form>`;
       const css = document.createElement('style');
